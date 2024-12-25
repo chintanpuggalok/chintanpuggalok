@@ -1,0 +1,6 @@
+{{ $image := .Page.Resources.GetMatch (.Get 0) }}
+{{ if $image }}
+  <img src="{{ $image.RelPermalink }}" style="width: 20vmax;" alt="Image">
+{{ else }}
+  <p>Image not found: {{ .Get 0 }}</p>
+{{ end }}

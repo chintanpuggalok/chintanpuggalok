@@ -1,0 +1,27 @@
+baseURL: https://chintanpuggalok.com/
+languageCode: en-us
+title: My Personal Blog
+# theme: hextra  # Ensure this matches the name of your theme
+markup:
+  defaultMarkdownHandler: goldmark
+  goldmark:
+    parser:
+      wrapStandAloneImageWithinParagraph: false
+    renderHooks:
+      image:
+        enableDefault: true
+module:
+  imports:
+    - path: github.com/imfing/hextra
+menu:
+  main:
+    - name: Blogs
+      pageRef: /blog
+      weight: 1
+    - name: Projects
+      pageRef: /projects
+      weight: 2
+    - name: Search
+      weight: 3
+      params:
+        type: search
