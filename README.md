@@ -3,7 +3,7 @@
 
 <p align="left"> <img src="https://komarev.com/ghpvc/?username=chintanpuggalok&label=Profile%20views&color=0e75b6&style=flat" alt="chintanpuggalok" /> </p>
 
-<p align="left"> <a href="https://twitter.com/puggalokchintan" target="blank"><img src="https://img.shields.io/twitter/follow/puggalokchintan?logo=twitter&style=for-the-badge" alt="puggalokchintan" /></a> </p>
+<p align="left"> <a href="https://twitter.com/chintanpuggalok" target="blank"><img src="https://img.shields.io/twitter/follow/chintanpuggalok?logo=twitter&style=for-the-badge" alt="chintanpuggalok" /></a> </p>
 
 - 🌱 I’m currently learning **Springboot**
 
