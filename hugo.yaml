@@ -16,7 +16,7 @@ module:
 menu:
   main:
     - name: Blogs
-      pageRef: /blog
+      pageRef: /blogs
       weight: 1
     - name: Projects
       pageRef: /projects
