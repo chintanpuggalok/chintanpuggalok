@@ -1,5 +1,4 @@
 ---
-breadcrumbs: true
 title: 'Welcome to My Personal Website'
 ---
 {{< imgresize "/profile.png" >}}
