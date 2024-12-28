@@ -25,7 +25,7 @@ Hi, I’m Chintan Puggalok, a software engineer at Intuit. I love building tech 
 
 Email: [chintanpuggalok@gmail.com](mailto:chintanpuggalok@gmail.com)
 
-## Explore More
+<!-- ## Explore More
 
 - [Blogs](/blogs)
-- [Projects](/projects)
+- [Projects](/projects) -->
