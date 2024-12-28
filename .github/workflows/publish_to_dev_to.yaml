@@ -1,0 +1,54 @@
+name: Publish to dev.to
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  publish:
+    if: "!contains(github.event.head_commit.message, 'Add article ID to latest article')"
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Find latest article by commit date
+      run: |
+        latest_article=$(git log -1 --pretty=format: --name-only -- blogs/**/*.md | head -n 1)
+        cp $latest_article latest_article.md
+
+    - name: Replace relative paths with GitHub raw content URLs
+      run: |
+        repo_url="https://raw.githubusercontent.com/${{ github.repository }}/main/"
+        sed -i "s|./|$repo_url|g" latest_article.md
+
+    - name: Publish to dev.to
+      env:
+        DEVTO_API_KEY: ${{ secrets.DEVTO_API_KEY }}
+      run: |
+        response=$(curl -X POST \
+          -H "Content-Type: application/json" \
+          -H "api-key: $DEVTO_API_KEY" \
+          -d @- https://dev.to/api/articles <<EOF
+        {
+          "article": {
+            "title": "Your Article Title",
+            "published": true,
+            "body_markdown": "$(cat latest_article.md)"
+          }
+        }
+        EOF
+        )
+        article_id=$(echo $response | jq -r '.id')
+        echo "id: $article_id" | cat - latest_article.md > temp && mv temp latest_article.md
+        echo "id: $article_id" | cat - $latest_article > temp && mv temp $latest_article
+
+    - name: Commit changes
+      run: |
+        git config --global user.name 'github-actions[bot]'
+        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+        git add $latest_article
+        git commit -m "Add article ID to latest article [skip ci]"
+        git push origin main
