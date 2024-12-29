@@ -24,74 +24,18 @@ jobs:
         fi
         cp "$latest_article" latest_article.md
 
-    - name: Replace relative paths with GitHub raw content URLs
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+
+    - name: Install dependencies
       run: |
-        cd $GITHUB_WORKSPACE
-        repo_url="https://raw.githubusercontent.com/${{ github.repository }}/${{ github.ref_name }}/"
-        latest_article_dir=$(dirname "$latest_article")
+        pip install requests pyyaml
 
-        # Debugging: Print the latest_article and latest_article_dir
-        echo "Latest article: $latest_article"
-        echo "Latest article directory: $latest_article_dir"
-
-        # Ensure the directory path is correct
-        if [ -z "$latest_article_dir" ] || [ "$latest_article_dir" = "." ]; then
-          latest_article_dir=$(dirname "$latest_article")
-        fi
-
-        # Update the sed command to remove ./ while replacing
-        if [[ "$OSTYPE" == "darwin"* ]]; then
-          sed -i '' "s|!\[\([^]]*\)\](\(\./[^)]*\))|![\1]($repo_url$latest_article_dir/\2)|g" latest_article.md
-        else
-          sed -i "s|!\[\([^]]*\)\](\(\./[^)]*\))|![\1]($repo_url$latest_article_dir/\2)|g" latest_article.md
-        fi
-
-    - name: Extract title from article
+    - name: Process markdown with Python
       run: |
-        title=$(grep -m 1 '^title: ' latest_article.md | sed 's/^title: //')
-        description=$(grep -m 1 '^description: ' latest_article.md | sed 's/^description: //')
-        tags=$(grep -m 1 '^tags: ' latest_article.md | sed 's/^tags: //' | jq -R 'split(",")' | jq -c '.')
-        echo "title=$title" >> $GITHUB_ENV
-        echo "description=$description" >> $GITHUB_ENV
-        echo "tags=$tags" >> $GITHUB_ENV
-
-    - name: Publish to dev.to
-      env:
-        DEVTO_API_KEY: ${{ secrets.DEVTO_API_KEY }}
-        title: ${{ env.title }}
-        description: ${{ env.description }}
-        tags: ${{ env.tags }}
-      run: |
-        request_body=$(cat <<EOF
-        {
-          "article": {
-            "title": "${{ env.title }}",
-            "description": "${{ env.description }}",
-            "tags": ${{ env.tags }},
-            "published": true,
-            "body_markdown": "$(cat latest_article.md)"
-          }
-        }
-        EOF
-        )
-        echo "$request_body"
-        response=$(curl -X POST \
-          -H "Content-Type: application/json" \
-          -H "api-key: $DEVTO_API_KEY" \
-          -d "$request_body" https://dev.to/api/articles)
-        if [ $? -eq 0 ]; then
-          article_id=$(echo $response | jq -r '.id')
-          echo "id: $article_id" | cat - latest_article.md > temp && mv temp latest_article.md
-          if [ ! -d "$latest_article" ]; then
-            echo "id: $article_id" | cat - latest_article.md > temp && mv temp "$latest_article"
-          else
-            echo "Cannot overwrite directory with non-directory"
-            exit 1
-          fi
-        else
-          echo "Failed to publish article to dev.to"
-          exit 1
-        fi
+        python process_markdown.py
 
     - name: Commit changes
       run: |
