@@ -30,7 +30,7 @@ if copy_result.returncode != 0:
 # Replace relative paths with GitHub raw content URLs
 github_repository = os.getenv('GITHUB_REPOSITORY', 'default/repo')
 github_ref_name = os.getenv('GITHUB_REF_NAME', 'main')
-repo_url = f"https://raw.githubusercontent.com/{github_repository}/{github_ref_name}/"
+repo_url = f"https://raw.githubusercontent.com/{github_repository}/{github_ref_name}/  "
 latest_article_dir = os.path.dirname(latest_article)
 print(f"Repository URL: {repo_url}")
 print(f"Latest article directory: {latest_article_dir}")
@@ -39,7 +39,7 @@ def replace_relative_paths(content, repo_url, latest_article_dir):
     def replace(match):
         # Strip the trailing slash and backslash from the URL
         cleaned_repo_url = repo_url.rstrip('/\\')
-        return f"{match.group(1)}({cleaned_repo_url}/{latest_article_dir}/{match.group(2).lstrip('./')})"
+        return f"{match.group(1)}({cleaned_repo_url}/{latest_article_dir}/{match.group(2).lstrip('./')}  )"
     return re.sub(r'(!\[.*?\]\()(\./.*?\))', replace, content)
 
 print("Reading latest_article.md")
