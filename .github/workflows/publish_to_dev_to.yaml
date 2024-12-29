@@ -24,6 +24,15 @@ jobs:
         repo_url="https://raw.githubusercontent.com/${{ github.repository }}/main/"
         sed -i "s|./|$repo_url|g" latest_article.md
 
+    - name: Extract title from article
+      run: |
+        title=$(grep -m 1 '^# ' latest_article.md | sed 's/^# //')
+        description=$(grep -m 1 '^description: ' latest_article.md | sed 's/^description: //')
+        tags=$(grep -m 1 '^tags: ' latest_article.md | sed 's/^tags: //' | jq -R 'split(",")' | jq -c '.')
+        echo "title: $title" >> latest_article.md
+        echo "description: $description" >> latest_article.md
+        echo "tags: $tags" >> latest_article.md
+
     - name: Publish to dev.to
       env:
         DEVTO_API_KEY: ${{ secrets.DEVTO_API_KEY }}
@@ -34,7 +43,9 @@ jobs:
           -d @- https://dev.to/api/articles <<EOF
         {
           "article": {
-            "title": "Your Article Title",
+            "title": "$title",
+            "description": "$description",
+            "tags": $tags,
             "published": true,
             "body_markdown": "$(cat latest_article.md)"
           }
