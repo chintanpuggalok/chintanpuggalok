@@ -1,0 +1,8 @@
+<ul>
+  {{ $section := .Site.GetPage "section" "blogs" }}
+  {{ range sort $section.Pages "Date" "desc" }}
+    <li>
+      <a href="{{ .Permalink }}">{{ .Title }}</a>
+    </li>
+  {{ end }}
+</ul>
