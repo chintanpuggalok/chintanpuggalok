@@ -16,7 +16,7 @@ jobs:
 
     - name: Find latest article by commit date
       run: |
-        latest_article=$(git log -1 --pretty=format: --name-only -- blogs/**/*.md | head -n 1)
+        latest_article=$(git log -1 --pretty=format: --name-only -- content/blogs/**/*.md | head -n 1)
         if [ -z "$latest_article" ]; then
           echo "No article found"
           exit 1
