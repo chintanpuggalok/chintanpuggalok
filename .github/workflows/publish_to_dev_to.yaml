@@ -26,27 +26,30 @@ jobs:
     - name: Replace relative paths with GitHub raw content URLs
       run: |
         repo_url="https://raw.githubusercontent.com/${{ github.repository }}/main/"
-        sed -i "s|!\[\([^]]*\)\](\(\.\./\|\./\))|![\1]($repo_url)|g" latest_article.md
+        sed -i "s|!\[\([^]]*\)\](\(\./[^)]*\))|![\1]($repo_url\2)|g" latest_article.md
 
     - name: Extract title from article
       run: |
-        title=$(grep -m 1 '^# ' latest_article.md | sed 's/^# //')
+        title=$(grep -m 1 '^title: ' latest_article.md | sed 's/^title: //')
         description=$(grep -m 1 '^description: ' latest_article.md | sed 's/^description: //')
         tags=$(grep -m 1 '^tags: ' latest_article.md | sed 's/^tags: //' | jq -R 'split(",")' | jq -c '.')
-        echo "title: $title" >> latest_article.md
-        echo "description: $description" >> latest_article.md
-        echo "tags: $tags" >> latest_article.md
+        echo "title=$title" >> $GITHUB_ENV
+        echo "description=$description" >> $GITHUB_ENV
+        echo "tags=$tags" >> $GITHUB_ENV
 
     - name: Publish to dev.to
       env:
         DEVTO_API_KEY: ${{ secrets.DEVTO_API_KEY }}
+        title: ${{ env.title }}
+        description: ${{ env.description }}
+        tags: ${{ env.tags }}
       run: |
         request_body=$(cat <<EOF
         {
           "article": {
-            "title": "$title",
-            "description": "$description",
-            "tags": $tags,
+            "title": "${{ env.title }}",
+            "description": "${{ env.description }}",
+            "tags": ${{ env.tags }},
             "published": true,
             "body_markdown": "$(cat latest_article.md)"
           }
@@ -56,7 +59,7 @@ jobs:
         echo "$request_body"
         response=$(curl -X POST \
           -H "Content-Type: application/json" \
-          -H "api-key: " \
+          -H "api-key: $DEVTO_API_KEY" \
           -d "$request_body" https://dev.to/api/articles)
         article_id=$(echo $response | jq -r '.id')
         echo "id: $article_id" | cat - latest_article.md > temp && mv temp latest_article.md
