@@ -3,7 +3,7 @@ name: Publish to dev.to
 on:
   push:
     branches:
-      - main
+      - url-forwarding
 
 jobs:
   publish:
@@ -39,7 +39,7 @@ jobs:
       run: |
         response=$(curl -X POST \
           -H "Content-Type: application/json" \
-          -H "api-key: $DEVTO_API_KEY" \
+          -H "api-key: " \
           -d @- https://dev.to/api/articles <<EOF
         {
           "article": {
