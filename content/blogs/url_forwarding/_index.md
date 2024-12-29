@@ -1,5 +1,5 @@
 ---
-date: 2024-12-29T04:30:15+05:30
+date: 2024-12-29T08:50:15+05:30
 title: 'How twitter.com Redirects to x.com (The Magic Behind URL Forwarding)'
 tags: "network"
 ---

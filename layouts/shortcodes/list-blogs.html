@@ -2,7 +2,7 @@
   {{ $section := .Site.GetPage "section" "blogs" }}
   {{ range sort $section.Pages "Date" "desc" }}
     <li>
-      <a href="{{ .Permalink }}">{{ .Title }}</a>
+      <a href="{{ .RelPermalink }}">{{ .Title }}</a>
     </li>
   {{ end }}
 </ul>
