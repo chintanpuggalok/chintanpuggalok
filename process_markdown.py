@@ -73,6 +73,9 @@ for line in lines:
     elif line.startswith('tags: '):
         tags = [tag.strip() for tag in line.replace('tags: ', '').strip().split(',')]
 
+if title:
+    title = title.strip("'")
+
 print(f"Title: {title}")
 print(f"Description: {description}")
 print(f"Tags: {tags}")
@@ -141,6 +144,8 @@ if response.status_code == 201:
     # Overwrite the file with the updated content
     with open(latest_article, 'w') as file:
         file.writelines(lines)
+    os.remove("./latest_article.md")
 else:
     print(f"Failed to publish article to dev.to: {response.status_code} {response.text}")
+    os.remove("./latest_article.md")
     exit(1)
