@@ -37,7 +37,8 @@ print(f"Latest article directory: {latest_article_dir}")
 
 def replace_relative_paths(content, repo_url, latest_article_dir):
     def replace(match):
-         return f"{match.group(1)}({repo_url}{latest_article_dir}/{match.group(2).lstrip('./')})"
+        # Strip the trailing slash from the URL
+        return f"{match.group(1)}({repo_url.rstrip('/')}/{latest_article_dir}/{match.group(2).lstrip('./')})"
     return re.sub(r'(!\[.*?\]\()(\./.*?\))', replace, content)
 
 print("Reading latest_article.md")
