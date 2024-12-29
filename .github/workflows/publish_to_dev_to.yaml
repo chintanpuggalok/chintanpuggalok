@@ -17,7 +17,12 @@ jobs:
     - name: Find latest article by commit date
       run: |
         latest_article=$(git log -1 --pretty=format: --name-only -- blogs/**/*.md | head -n 1)
-        cp $latest_article latest_article.md
+        if [ -z "$latest_article" ]; then
+          echo "No article found"
+          exit 1
+        fi
+        echo 
+        cp "$latest_article" latest_article.md
 
     - name: Replace relative paths with GitHub raw content URLs
       run: |
