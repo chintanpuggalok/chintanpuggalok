@@ -1,4 +1,5 @@
 ---
+id: 2180130
 date: 2024-12-29T10:07:15+05:30
 title: 'How twitter.com Redirects to x.com (The Magic Behind URL Forwarding)'
 tags: "network"
