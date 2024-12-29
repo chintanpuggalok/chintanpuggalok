@@ -24,6 +24,7 @@ jobs:
         pip install requests pyyaml
 
     - name: Process markdown with Python
+      id: process_markdown
       env:
         GITHUB_WORKSPACE: ${{ github.workspace }}
         GITHUB_REPOSITORY: ${{ github.repository }}
@@ -33,11 +34,12 @@ jobs:
         python process_markdown.py
 
     - name: Commit changes
+      env:
+        LATEST_ARTICLE: ${{ steps.process_markdown.outputs.latest_article }}
       run: |
         echo "Article body before committing:"
-        cat latest_article.md
         git config --global user.name 'github-actions[bot]'
         git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-        git add $latest_article
+        git add $LATEST_ARTICLE
         git commit -m "Add article ID to latest article [skip ci]"
         git push origin main

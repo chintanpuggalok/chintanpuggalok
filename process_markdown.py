@@ -156,6 +156,8 @@ if response.status_code == 201:
     with open(latest_article, 'w') as file:
         file.writelines(lines)
     os.remove("./latest_article.md")
+    print(f"Latest article found: {latest_article}")
+    print(f"::set-output name=latest_article::{latest_article}")
 else:
     print(f"Failed to publish article to dev.to: {response.status_code} {response.text}")
     os.remove("./latest_article.md")
