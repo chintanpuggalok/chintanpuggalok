@@ -14,16 +14,6 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: Find latest article by commit date
-      run: |
-        cd $GITHUB_WORKSPACE
-        latest_article=$(git log -1 --pretty=format: --name-only -- content/blogs/**/*.md | grep -v 'content/blogs/_index.md' | head -n 1)
-        if [ -z "$latest_article" ]; then
-          echo "No article found"
-          exit 1
-        fi
-        cp "$latest_article" latest_article.md
-
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
@@ -34,6 +24,11 @@ jobs:
         pip install requests pyyaml
 
     - name: Process markdown with Python
+      env:
+        GITHUB_WORKSPACE: ${{ github.workspace }}
+        GITHUB_REPOSITORY: ${{ github.repository }}
+        GITHUB_REF_NAME: ${{ github.ref_name }}
+        DEVTO_API_KEY: ${{ secrets.DEVTO_API_KEY }}
       run: |
         python process_markdown.py
 
