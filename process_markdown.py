@@ -35,10 +35,10 @@ latest_article_dir = os.path.dirname(latest_article)
 print(f"Repository URL: {repo_url}")
 print(f"Latest article directory: {latest_article_dir}")
 
-# def replace_relative_paths(content, repo_url, latest_article_dir):
-#     def replace(match):
-#          return f"{match.group(1)}({repo_url}{latest_article_dir}/{match.group(2).lstrip('./')})"
-#     return re.sub(r'(!\[.*?\]\()(\./.*?\))', replace, content)
+def replace_relative_paths(content, repo_url, latest_article_dir):
+    def replace(match):
+         return f"{match.group(1)}({repo_url}{latest_article_dir}/{match.group(2).lstrip('./')})"
+    return re.sub(r'(!\[.*?\]\()(\./.*?\))', replace, content)
 
 print("Reading latest_article.md")
 with open('latest_article.md', 'r') as file:
@@ -50,7 +50,7 @@ if not isinstance(content, str):
     exit(1)
 
 print("Replacing relative paths")
-# content = replace_relative_paths(content, repo_url, latest_article_dir)
+content = replace_relative_paths(content, repo_url, latest_article_dir)
 
 # Remove metadata from the top of the markdown file
 
@@ -128,14 +128,19 @@ if response.status_code == 201:
     article_id = response.json().get('id')
     print(f"Article published successfully with ID: {article_id}")
     
-    # Add id to the metadata
-    metadata = f"---\nid: {article_id}\ndate: {lines[0].replace('date: ', '').strip()}\ntitle: {title}\ntags: {', '.join(tags)}\n---\n"
-    content = metadata + content
+    # Open the latest article file again
+    with open(latest_article, 'r') as file:
+        lines = file.readlines()
     
-    with open('latest_article.md', 'w') as file:
-        file.write(content)
+    # Find the first '---' and append the ID
+    for i, line in enumerate(lines):
+        if line.strip() == '---':
+            lines.insert(i + 1, f"id: {article_id}\n")
+            break
+    
+    # Overwrite the file with the updated content
     with open(latest_article, 'w') as file:
-        file.write(content)
+        file.writelines(lines)
 else:
     print(f"Failed to publish article to dev.to: {response.status_code} {response.text}")
     exit(1)
