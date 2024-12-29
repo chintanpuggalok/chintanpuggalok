@@ -3,7 +3,6 @@ import re
 import requests
 import yaml
 import subprocess
-
 # Change to the base of the repository
 print("Changing directory to the base of the repository")
 os.chdir(os.getenv('GITHUB_WORKSPACE', '.'))
@@ -28,19 +27,14 @@ if copy_result.returncode != 0:
     exit(1)
 
 # Replace relative paths with GitHub raw content URLs
-github_repository = os.getenv('GITHUB_REPOSITORY', 'default/repo')
+github_repository = os.getenv('GITHUB_REPOSITORY', 'chintanpuggalok/chintanpuggalok')
 github_ref_name = os.getenv('GITHUB_REF_NAME', 'main')
-repo_url = f"https://raw.githubusercontent.com/{github_repository}/{github_ref_name}/  "
+repo_url = f"https://raw.githubusercontent.com/{github_repository}/{github_ref_name}"
 latest_article_dir = os.path.dirname(latest_article)
 print(f"Repository URL: {repo_url}")
 print(f"Latest article directory: {latest_article_dir}")
 
-def replace_relative_paths(content, repo_url, latest_article_dir):
-    def replace(match):
-        # Strip the trailing slash and backslash from the URL
-        cleaned_repo_url = repo_url.rstrip('/\\')
-        return f"{match.group(1)}({cleaned_repo_url}/{latest_article_dir}/{match.group(2).lstrip('./')}  )"
-    return re.sub(r'(!\[.*?\]\()(\./.*?\))', replace, content)
+
 
 print("Reading latest_article.md")
 with open('latest_article.md', 'r') as file:
@@ -50,6 +44,18 @@ with open('latest_article.md', 'r') as file:
 if not isinstance(content, str):
     print("Error: Content is not a string")
     exit(1)
+
+def replace_relative_paths(content, repo_url, latest_article_dir):
+    def replace(match):
+        # Strip the trailing slash from the URL
+        cleaned_repo_url = repo_url.rstrip('/')
+        # Construct the absolute URL
+        text_removed = match.group(2).lstrip('./').split(' ')[0]
+        url = f"{cleaned_repo_url}/{latest_article_dir}/{text_removed}".rstrip(' )')
+        # Return the updated tag without any text that follows the URL
+        return f"{match.group(1)}{url})"
+    # Updated regex to capture from ! till either " or ) is seen
+    return re.sub(r'(!\[.*?\]\()(\./.*?["\)])', replace, content)
 
 print("Replacing relative paths")
 content = replace_relative_paths(content, repo_url, latest_article_dir)
@@ -105,6 +111,7 @@ print("Removing metadata from the top of the markdown file")
 metadata_pattern = re.compile(r'^---\n(.*?\n)*?---\n', re.DOTALL)
 content = re.sub(metadata_pattern, '', content)
 
+
 # Publish to dev.to
 devto_api_key = os.getenv('DEVTO_API_KEY')
 request_body = {
@@ -128,6 +135,8 @@ response = requests.post(
     },
     json=request_body
 )
+with open('s', 'w') as file:
+        file.write(content)
 
 if response.status_code == 201:
     article_id = response.json().get('id')
