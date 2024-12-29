@@ -25,9 +25,24 @@ jobs:
 
     - name: Replace relative paths with GitHub raw content URLs
       run: |
-        repo_url="https://raw.githubusercontent.com/${{ github.repository }}/refs/heads/main"
+        repo_url="https://raw.githubusercontent.com/${{ github.repository }}/${{ github.ref_name }}/"
         latest_article_dir=$(dirname "$latest_article")
-        sed -i "s|!\[\([^]]*\)\](\(\./[^)]*\))|![\1]($repo_url$latest_article_dir/\2)|g" latest_article.md
+
+        # Debugging: Print the latest_article and latest_article_dir
+        echo "Latest article: $latest_article"
+        echo "Latest article directory: $latest_article_dir"
+
+        # Ensure the directory path is correct
+        if [ -z "$latest_article_dir" ]; then
+          latest_article_dir="."
+        fi
+
+        # Update the sed command to remove ./ while replacing
+        if [[ "$OSTYPE" == "darwin"* ]]; then
+          sed -i '' "s|!\[\([^]]*\)\](\(\./[^)]*\))|![\1]($repo_url$latest_article_dir/\2)|g" latest_article.md
+        else
+          sed -i "s|!\[\([^]]*\)\](\(\./[^)]*\))|![\1]($repo_url$latest_article_dir/\2)|g" latest_article.md
+        fi
 
     - name: Extract title from article
       run: |
