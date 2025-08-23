@@ -19,7 +19,6 @@ Hi, I’m Chintan Puggalok, a software engineer at Intuit. I love building tech 
 - [LinkedIn](https://www.linkedin.com/in/chintanpuggalok/)
 - [GitHub](https://github.com/chintanpuggalok)
 - [Dev.to](https://dev.to/chintanpuggalok)
-- [Twitter](https://x.com/chintanpuggalok)
 
 ## Contact
 
