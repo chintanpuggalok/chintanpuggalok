@@ -1,0 +1,163 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import {
+  education,
+  experience,
+  identity,
+  impactMetrics,
+  projects,
+  recognition,
+  skillGroups,
+} from "../../shared/portfolio";
+---
+
+<BaseLayout
+  title={`${identity.name} — Backend & Distributed Systems Engineer`}
+  description={identity.shortBio}
+  type="profile"
+>
+  <main class="page-shell">
+    <section class="profile-hero" id="about">
+      <div>
+        <p class="eyebrow"><span class="status-dot"></span>{identity.eyebrow}</p>
+        <h1>{identity.headline}</h1>
+        <p class="lead">{identity.role} at {identity.currentCompany} · {identity.location}</p>
+        <p class="lead">{identity.shortBio}</p>
+        <div class="hero-actions">
+          <a class="button-primary" href="/?mode=visual">Ask my portfolio AI <span aria-hidden="true">→</span></a>
+          <a class="button-secondary" href={identity.resume} target="_blank">View résumé <span aria-hidden="true">↗</span></a>
+          <a class="button-secondary" href={identity.links.linkedin} target="_blank" rel="noreferrer">LinkedIn</a>
+        </div>
+      </div>
+      <div class="profile-image-wrap">
+        <img src="/profile-400.webp" width="310" height="310" alt={`Portrait of ${identity.name}`} decoding="async" fetchpriority="high" />
+      </div>
+    </section>
+
+    <section class="section" id="impact" aria-labelledby="impact-title">
+      <div class="section-header">
+        <span class="section-index">01 / Selected impact</span>
+        <div class="section-title">
+          <h2 id="impact-title">Scale expressed as outcomes.</h2>
+          <p>A selection of measurable and initiative-level results from production systems and engineering programs.</p>
+        </div>
+      </div>
+      <div class="metric-grid">
+        {impactMetrics.map((metric) => (
+          <article class="metric-card">
+            <strong>{metric.value}</strong>
+            <h3>{metric.label}</h3>
+            <p>{metric.detail}</p><small>{metric.qualifier === "initiative" ? "Initiative-level outcome" : "Measured outcome"}</small>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="section" id="experience" aria-labelledby="experience-title">
+      <div class="section-header">
+        <span class="section-index">02 / Experience</span>
+        <div class="section-title">
+          <h2 id="experience-title">Systems ownership from design to operation.</h2>
+          <p>Backend architecture, event streaming, platform modernization, and operational excellence across Amazon and Intuit.</p>
+        </div>
+      </div>
+      <div class="timeline">
+        {experience.map((role) => (
+          <article class="timeline-item">
+            <div class="timeline-meta">
+              <span>{role.period}</span>
+              <small>{role.location}</small>
+            </div>
+            <div class="timeline-content">
+              <h3>{role.role} <span>· {role.company}</span></h3>
+              <p>{role.summary}</p>
+              <ul>
+                {role.highlights.slice(0, 3).map((highlight) => <li>{highlight}</li>)}
+              </ul>
+              <div class="tag-list">{role.technologies.slice(0, 8).map((technology) => <span class="tag">{technology}</span>)}</div>
+              <a class="card-arrow" href={role.href}>View role details <span aria-hidden="true">→</span></a>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="section" id="capabilities" aria-labelledby="capabilities-title">
+      <div class="section-header">
+        <span class="section-index">03 / Capabilities</span>
+        <div class="section-title">
+          <h2 id="capabilities-title">A backend toolkit organized around problems.</h2>
+          <p>Technologies matter most when they support understandable architecture, reliable delivery, and observable production systems.</p>
+        </div>
+      </div>
+      <div class="capability-grid">
+        {skillGroups.map((group, index) => (
+          <article class="capability-card">
+            <span class="card-kicker">Capability {String(index + 1).padStart(2, "0")}</span>
+            <h3>{group.title}</h3>
+            <p>{group.description}</p>
+            <ul>{group.items.map((item) => <li class="tag">{item}</li>)}</ul>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="section" id="projects" aria-labelledby="projects-title">
+      <div class="section-header">
+        <span class="section-index">04 / Selected projects</span>
+        <div class="section-title">
+          <h2 id="projects-title">Applied AI built around real workflows.</h2>
+          <p>Agents and automation prototypes focused on reducing operational friction and making institutional knowledge easier to use.</p>
+        </div>
+      </div>
+      <div class="project-grid">
+        {projects.map((project) => (
+          <a class="project-card" href={project.href}>
+            <span class="card-kicker">{project.period}</span>
+            <h3>{project.title}</h3>
+            <p>{project.summary}</p>
+            <div class="tag-list">{project.technologies.slice(0, 4).map((technology) => <span class="tag">{technology}</span>)}</div>
+            <span class="card-arrow">Read case study <span aria-hidden="true">→</span></span>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <section class="section" id="education" aria-labelledby="credentials-title">
+      <div class="section-header">
+        <span class="section-index">05 / Foundation</span>
+        <div class="section-title"><h2 id="credentials-title">Education and recognition.</h2></div>
+      </div>
+      <div class="credentials-grid">
+        <article class="credential-card">
+          <span class="card-kicker">Education · {education.period}</span>
+          <h3>{education.institution}</h3>
+          <p>{education.degree}</p>
+          <p>GPA {education.gpa}</p>
+        </article>
+        <article class="credential-card" id="recognition">
+          <span class="card-kicker">Recognition</span>
+          <ul>{recognition.map((item) => <li>{item}</li>)}</ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="writing" aria-labelledby="writing-title">
+      <div class="section-header"><span class="section-index">06 / Writing</span><div class="section-title"><h2 id="writing-title">Notes from the network console.</h2><p><a href="/writing/url-forwarding">How twitter.com redirects to x.com →</a></p></div></div>
+    </section>
+
+    <section class="section">
+      <div class="cta-panel">
+        <div>
+          <p class="eyebrow"><span class="status-dot"></span>{identity.availability}</p>
+          <h2>Have a backend problem worth thinking deeply about?</h2>
+          <p>Ask the portfolio agent for context, or reach out directly for a human conversation.</p>
+        </div>
+        <div class="hero-actions">
+          <a class="button-primary" href={`mailto:${identity.email}`}>Start a conversation</a>
+          <a class="button-secondary" href="/?mode=cli">Open agent CLI</a>
+        </div>
+      </div>
+    </section>
+  </main>
+</BaseLayout>

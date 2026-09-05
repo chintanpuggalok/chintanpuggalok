@@ -1,0 +1,29 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { identity } from "../../shared/portfolio";
+---
+
+<BaseLayout title={`Contact — ${identity.name}`} description={`Contact ${identity.name} about backend, platform, and distributed-systems opportunities.`}>
+  <main class="page-shell">
+    <header class="page-hero">
+      <p class="eyebrow"><span class="status-dot"></span>{identity.availability}</p>
+      <h1>Let's talk about systems that need to scale responsibly.</h1>
+      <p>Email is the best route for an introduction. LinkedIn and GitHub provide additional context on my professional work and interests.</p>
+      <div class="page-hero-actions">
+        <a class="button-primary" href={`mailto:${identity.email}`}>Email {identity.email}</a>
+        <a class="button-secondary" href={identity.links.linkedin} target="_blank" rel="noreferrer">Connect on LinkedIn</a>
+        <a class="button-secondary" href={identity.links.github} target="_blank" rel="noreferrer">View GitHub</a>
+      </div>
+    </header>
+    <section class="section">
+      <div class="cta-panel">
+        <div>
+          <p class="eyebrow">Not sure where to start?</p>
+          <h2>Ask the portfolio agent for the relevant context first.</h2>
+          <p>It can summarize experience, projects, backend strengths, and measurable engineering outcomes from approved public information.</p>
+        </div>
+        <div class="hero-actions"><a class="button-primary" href="/?mode=visual">Open the assistant</a><a class="button-secondary" href="/?mode=cli">Use the CLI</a></div>
+      </div>
+    </section>
+  </main>
+</BaseLayout>

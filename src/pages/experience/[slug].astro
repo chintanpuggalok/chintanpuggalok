@@ -1,0 +1,54 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { experience, identity, impactMetrics } from "../../../shared/portfolio";
+
+export function getStaticPaths() {
+  return experience.map((role) => ({
+    params: { slug: role.href.split("/").filter(Boolean).at(-1) },
+    props: { role },
+  }));
+}
+
+const { role } = Astro.props;
+const metrics = impactMetrics.filter((metric) => metric.sourceId === role.id);
+---
+
+<BaseLayout title={`${role.role} at ${role.company} — ${identity.name}`} description={role.summary}>
+  <main class="page-shell detail-layout">
+    <article class="detail-main">
+      <p class="eyebrow">Experience / {role.company}</p>
+      <h1>{role.role}</h1>
+      <p class="detail-lead">{role.summary}</p>
+
+      {metrics.length > 0 && (
+        <>
+          <h2>Selected scale</h2>
+          <div class="metric-grid" style={`grid-template-columns: repeat(${Math.min(metrics.length, 2)}, minmax(0, 1fr));`}>
+            {metrics.map((metric) => (
+              <div class="metric-card"><strong>{metric.value}</strong><h3>{metric.label}</h3><p>{metric.detail}</p></div>
+            ))}
+          </div>
+        </>
+      )}
+
+      <h2>Scope and outcomes</h2>
+      <ul class="detail-list">{role.highlights.map((highlight) => <li>{highlight}</li>)}</ul>
+
+      <h2>Engineering context</h2>
+      <p class="detail-lead">This page intentionally stays within the detail approved in the public résumé. It describes engineering scope and outcomes without exposing employer-confidential implementation information.</p>
+
+      <div class="hero-actions">
+        <a class="button-primary" href={`/?mode=visual&prompt=${encodeURIComponent(`Tell me about Chintan's work at ${role.company}`)}`}>Ask the portfolio AI</a>
+        <a class="button-secondary" href="/experience">All experience</a>
+      </div>
+    </article>
+    <aside class="detail-sidebar" aria-label="Role metadata">
+      <dl>
+        <div><dt>Company</dt><dd>{role.company}</dd></div>
+        <div><dt>Period</dt><dd>{role.period}</dd></div>
+        <div><dt>Location</dt><dd>{role.location}</dd></div>
+        <div><dt>Technologies</dt><dd>{role.technologies.join(" · ")}</dd></div>
+      </dl>
+    </aside>
+  </main>
+</BaseLayout>

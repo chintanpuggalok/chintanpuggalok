@@ -1,0 +1,30 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { identity } from "../../../shared/portfolio";
+---
+
+<BaseLayout title={`Writing — ${identity.name}`} description="Technical notes on backend engineering, web infrastructure, distributed systems, and applied AI.">
+  <main class="page-shell">
+    <header class="page-hero">
+      <p class="eyebrow">Writing / Engineering notes</p>
+      <h1>Understanding systems by taking them apart.</h1>
+      <p>Technical notes on the mechanics behind everyday software, with more writing on distributed systems and applied AI in progress.</p>
+    </header>
+    <section class="section" aria-label="Technical articles">
+      <div class="writing-grid">
+        <a class="writing-card" href="/writing/url-forwarding">
+          <span class="card-kicker">Network · Dec 29, 2024 · 4 min</span>
+          <h3>How twitter.com redirects to x.com</h3>
+          <p>A browser-network-console walkthrough of HTTP redirects, status codes, and URL forwarding across domains.</p>
+          <span class="card-arrow">Read article <span aria-hidden="true">→</span></span>
+        </a>
+        <a class="writing-card" href={identity.links.devto} target="_blank" rel="noreferrer">
+          <span class="card-kicker">Next / Distributed systems</span>
+          <h3>More engineering notes are being prepared.</h3>
+          <p>Future articles will cover stream processing, reactive services, reliability investigations, and grounded agent design.</p>
+          <span class="card-arrow">Follow on Dev.to <span aria-hidden="true">↗</span></span>
+        </a>
+      </div>
+    </section>
+  </main>
+</BaseLayout>

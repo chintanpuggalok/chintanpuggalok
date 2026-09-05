@@ -1,0 +1,61 @@
+/* Interaction/accessibility refinements shared by both chat presentations. */
+.agent-header, .cli-titlebar { z-index: 20; }
+.portfolio-menu { position: relative; font-family: var(--sans); font-size: 12px; }
+.portfolio-menu summary { padding: 6px; min-height: 28px; cursor: pointer; color: var(--text-soft); }
+.portfolio-menu nav {
+  position: absolute; right: 0; top: 100%; z-index: 50; width: 180px;
+  display: grid; padding: 8px; border: 1px solid var(--line-strong); border-radius: 8px;
+  background: var(--panel-solid); box-shadow: var(--shadow);
+}
+.portfolio-menu nav a { padding: 8px 10px; min-height: 32px; color: var(--text); text-decoration: none; }
+.portfolio-menu nav a:hover { background: var(--accent-soft); }
+.answer-cards { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(200px,100%),1fr)); gap: 8px; margin-top: 12px; }
+.answer-card { min-width: 0; padding: 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); color: var(--text-soft); text-decoration: none; }
+.answer-card strong { display: block; font-size: 13px; color: var(--accent-bright); }
+.answer-card span { font-size: 11px; color: var(--muted); }
+.answer-card p { font-size: 12px; line-height: 1.5; margin: 6px 0 0; }
+.answer-status { margin: 12px 0 4px; color: var(--warning); font-size: 12px; }
+.retry-button, .cli-command-actions button { min-height: 28px; padding: 5px 9px; border: 1px solid var(--line-strong); border-radius: 5px; background: var(--panel-solid); color: var(--text-soft); cursor: pointer; font-size: 12px; }
+.retry-button:disabled { opacity: .6; cursor: default; }
+.cli-command-actions { display: flex; flex-wrap: wrap; gap: 6px; padding-bottom: 6px; }
+.cli-model-label { max-width: 205px; overflow: hidden; text-overflow: ellipsis; }
+.cli-titlebar { grid-template-columns: minmax(0,1fr) auto auto; }
+.cli-title-identity, .cli-title-status, .cli-title-actions { min-width: 0; }
+.cli-title-session { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cli-assistant .markdown-body { font-size: 13px; }
+.cli-footer, .composer-meta, .assistant-name, .cli-agent-label { font-size: 10px; }
+.tool-message { font-size: 11px; }
+.message-sources a { min-height: 26px; padding: 5px 8px; font-size: 11px; }
+.composer textarea { font-size: 16px; }
+.composer-cli textarea { font-size: 14px; }
+.composer-send { width: 36px; height: 36px; }
+.visual-user, .markdown-body { font-size: 14px; }
+.quick-prompts button { min-height: 40px; font-size: 12px; }
+.cli-transcript { min-height: 0; min-width: 0; }
+.composer-meta a { color: var(--muted); }
+.composer-cli { padding-bottom: max(5px,env(safe-area-inset-bottom)); }
+@media (max-width: 900px) { .cli-title-status { display:none; } .cli-titlebar { grid-template-columns: minmax(0,1fr) auto; } }
+@media (max-width: 620px) {
+  .mode-switch button { min-width: 30px; padding: 7px; }
+  .mode-switch button span { display: none; }
+  .cli-title-identity strong { font-size: 10px; }
+  .cli-title-actions { font-size: 10px; }
+  .cli-title-actions button, .cli-title-actions > a { min-width: 30px; min-height: 30px; padding: 6px; }
+  .composer-cli textarea { font-size: 16px; }
+  .conversation-heading { padding-top: 18px; padding-bottom: 12px; }
+  .conversation-heading h1 { font-size: 23px; }
+  .quick-prompts { max-height: 60px; }
+  .cli-assistant { margin-left: 8px; padding-left: 9px; }
+  .tool-message-cli { margin-left: 8px; max-width: calc(100% - 8px); }
+  .composer-meta span:first-child { display:none; }
+  .composer-meta { justify-content:flex-end; }
+  .composer-visual { padding-bottom: max(8px,env(safe-area-inset-bottom)); }
+}
+@media (max-height: 500px) {
+  .conversation-heading { padding: 8px 0; }
+  .conversation-heading h1 { font-size: 18px; }
+  .conversation-heading .eyebrow { display:none; }
+  .quick-prompts { display:none; }
+  .composer-meta { padding-top: 2px; }
+  .cli-command-actions { display:none; }
+}

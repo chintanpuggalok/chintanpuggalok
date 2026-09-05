@@ -1,0 +1,43 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { identity, projects } from "../../../shared/portfolio";
+
+export function getStaticPaths() {
+  return projects.map((project) => ({
+    params: { slug: project.href.split("/").filter(Boolean).at(-1) },
+    props: { project },
+  }));
+}
+
+const { project } = Astro.props;
+---
+
+<BaseLayout title={`${project.title} — ${identity.name}`} description={project.summary}>
+  <main class="page-shell detail-layout">
+    <article class="detail-main">
+      <p class="eyebrow">Project / {project.period}</p>
+      <h1>{project.title}</h1>
+      <p class="detail-lead">{project.summary}</p>
+
+      <h2>What it explored</h2>
+      <ul class="detail-list">{project.highlights.map((highlight) => <li>{highlight}</li>)}</ul>
+
+      <h2>Public disclosure</h2>
+      <p class="detail-lead">This summary is limited to the supplied public résumé. Detailed architecture, source code, and unreported metrics are not published here.</p>
+
+      {project.confidentialityNote && <p class="notice">{project.confidentialityNote}</p>}
+
+      <div class="hero-actions">
+        <a class="button-primary" href={`/?mode=visual&prompt=${encodeURIComponent(`Tell me about the ${project.title} project`)}`}>Ask about this project</a>
+        <a class="button-secondary" href="/projects">All projects</a>
+      </div>
+    </article>
+    <aside class="detail-sidebar" aria-label="Project metadata">
+      <dl>
+        <div><dt>Period</dt><dd>{project.period}</dd></div>
+        <div><dt>Focus</dt><dd>{project.technologies.join(" · ")}</dd></div>
+        <div><dt>Disclosure</dt><dd>Public résumé scope only</dd></div>
+      </dl>
+    </aside>
+  </main>
+</BaseLayout>
