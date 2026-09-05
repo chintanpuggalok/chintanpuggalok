@@ -39,6 +39,7 @@ function cors(request:Request,env:Env): Headers {
   headers.set("Access-Control-Allow-Headers","Content-Type");
   headers.set("Access-Control-Allow-Methods","GET, POST, OPTIONS");
   headers.set("Access-Control-Max-Age","86400");
+  headers.set("Access-Control-Expose-Headers","Retry-After");
   return headers;
 }
 function json(request:Request,env:Env,value:unknown,status=200):Response {
@@ -82,16 +83,23 @@ export default {
     const validated=validateChatRequest(value);
     if(!validated.data) return json(request,env,{error:validated.error},400);
     const chat=validated.data, requestId=crypto.randomUUID();
-    const previousQuestions=chat.history.filter(m=>m.role==="user").map(m=>m.content);
+    // Never replay rejected questions, refusal text, or client-supplied assistant
+    // answers to the provider. Retain only in-scope user questions as context.
+    const previousQuestions: string[]=[];
+    for (const item of chat.history) {
+      if (item.role === "user" && isPortfolioQuestion(item.content, previousQuestions)) previousQuestions.push(item.content);
+    }
+    const safeHistory: HistoryItem[]=previousQuestions.map(content=>({role:"user",content}));
     const inScope=isPortfolioQuestion(chat.message,previousQuestions);
     const followUp=isPortfolioFollowUp(chat.message);
-    const contextQuery=followUp ? `${previousQuestions.at(-1)??""} ${chat.message}` : chat.message;
+    const lastTopic=previousQuestions.filter(question=>!isPortfolioFollowUp(question)).at(-1)??"";
+    const contextQuery=followUp ? `${lastTopic} ${chat.message}` : chat.message;
     const sources=selectPortfolioSources(contextQuery,5);
     const abort=new AbortController();
     const cancel=()=>abort.abort();
     request.signal.addEventListener("abort",cancel,{once:true});
     const encoder=new TextEncoder();
-    const events=inScope ? providerEvents(env,chat.message,chat.history,sources,abort.signal) : (async function*(){
+    const events=inScope ? providerEvents(env,chat.message,safeHistory,sources,abort.signal) : (async function*(){
       yield {event:"meta",data:{model:"Portfolio scope router"}};
       yield {event:"delta",data:{text:scopeReply}};
       yield {event:"done",data:{fallback:false}};
