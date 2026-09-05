@@ -28,7 +28,7 @@ const { project } = Astro.props;
       {project.confidentialityNote && <p class="notice">{project.confidentialityNote}</p>}
 
       <div class="hero-actions">
-        <a class="button-primary" href={`/?mode=visual&prompt=${encodeURIComponent(`Tell me about the ${project.title} project`)}`}>Ask about this project</a>
+        <a class="button-primary" href={`/ask?mode=visual&prompt=${encodeURIComponent(`Tell me about the ${project.title} project`)}`}>Ask about this project</a>
         <a class="button-secondary" href="/projects">All projects</a>
       </div>
     </article>

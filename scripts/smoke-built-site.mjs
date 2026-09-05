@@ -4,6 +4,7 @@ import { join } from "node:path";
 const dist = new URL("../dist/", import.meta.url);
 const requiredFiles = [
   "index.html",
+  "ask/index.html",
   "profile/index.html",
   "experience/index.html",
   "experience/amazon/index.html",
@@ -32,6 +33,7 @@ for (const file of requiredFiles) {
 
 const profile = await readFile(new URL("profile/index.html", dist), "utf8");
 const home = await readFile(new URL("index.html", dist), "utf8");
+const ask = await readFile(new URL("ask/index.html", dist), "utf8");
 const privacy = await readFile(new URL("privacy/index.html", dist), "utf8");
 
 const expectations = [
@@ -39,8 +41,11 @@ const expectations = [
   [profile.includes("1.4M+"), "impact metric is missing from profile"],
   [profile.includes("Amazon"), "current employer is missing from profile"],
   [profile.includes("rel=\"canonical\""), "canonical metadata is missing"],
-  [home.includes("PortfolioApp"), "interactive app hydration marker is missing"],
-  [home.includes("View full profile"), "no-JavaScript profile fallback is missing"],
+  [home.includes("1.4M+"), "default homepage does not contain the full profile"],
+  [home.includes("/ask?mode=visual"), "default homepage Ask AI link is missing"],
+  [!home.includes("PortfolioApp"), "default homepage unexpectedly loads the AI application"],
+  [ask.includes("PortfolioApp"), "Ask AI hydration marker is missing"],
+  [ask.includes("View full profile"), "Ask AI no-JavaScript profile fallback is missing"],
   [privacy.includes("OpenRouter"), "AI privacy disclosure is missing"],
 ];
 for (const [condition, message] of expectations) if (!condition) failures.push(message);

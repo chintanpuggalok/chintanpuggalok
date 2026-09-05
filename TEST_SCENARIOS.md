@@ -8,8 +8,9 @@
 
 | ID | Scenario | Expected result | Coverage |
 |---|---|---|---|
-| UI-01 | First visit to `/` | Mode selector offers Visual, Agent CLI, and Full Profile | React integration |
-| UI-02 | Choose Visual mode | Visual workspace loads and preference is stored locally | React integration |
+| UI-01 | First visit to `/` | Complete static profile renders without loading the AI application | Browser E2E + smoke |
+| UI-02 | Select Ask AI, then choose Visual mode | `/ask` mode selector and Visual workspace load; preference is stored locally | Browser E2E + React integration |
+| UI-03 | Focus the mobile composer while viewport height changes | Document remains fixed and composer stays visible above the keyboard-sized viewport | Browser E2E |
 | CLI-01 | Run `/experience` | Local tool result and all roles render without an AI request | React integration |
 | CLI-02 | Enter `/exp` then Tab | Input autocompletes to `/experience` | React integration |
 | CLI-03 | Press Ctrl+L | Transcript returns to the welcome state | React integration |
@@ -48,7 +49,7 @@ It also verifies that generated HTML contains canonical metadata, the approved e
 
 Automated by `scripts/e2e-spec.mjs`, `scripts/browser-audit.mjs`, `scripts/audit-edge-cases.mjs`, and `scripts/audit-chat-failures.mjs` where practical; physical-device and screen-reader behavior still requires manual confirmation.
 
-1. **Responsive layout:** inspect 320px, 768px, and desktop widths; ensure no horizontal scrolling.
+1. **Responsive layout:** inspect 320px, 768px, and desktop widths; ensure no horizontal scrolling and verify the centered profile portrait.
 2. **Keyboard-only flow:** select a mode, submit prompts, switch modes, open sources, and reach Full Profile without a pointer.
 3. **Reduced motion:** emulate `prefers-reduced-motion: reduce`; transitions and animated cursors become effectively instant.
 4. **Streaming cancellation:** start an AI answer and press Escape or Stop; partial output remains and the interface becomes usable.

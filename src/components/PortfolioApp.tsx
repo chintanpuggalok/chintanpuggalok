@@ -473,14 +473,31 @@ export default function PortfolioApp({ apiUrl, initialMode }: PortfolioAppProps)
   }, [mode]);
 
   useEffect(() => {
+    const root = document.documentElement;
     const viewport = window.visualViewport;
+    root.classList.add("portfolio-chat-active");
     const resize = () => {
-      if (!viewport || viewport.scale === 1) document.documentElement.style.setProperty("--app-height", `${viewport?.height ?? window.innerHeight}px`);
+      if (viewport && viewport.scale !== 1) return;
+      root.style.setProperty("--app-height", `${viewport?.height ?? window.innerHeight}px`);
+      root.style.setProperty("--app-top", `${viewport?.offsetTop ?? 0}px`);
+    };
+    const keepDocumentStill = () => {
+      if (window.scrollY) window.scrollTo(0, 0);
     };
     resize();
     viewport?.addEventListener("resize", resize);
+    viewport?.addEventListener("scroll", resize);
     window.addEventListener("resize", resize);
-    return () => { viewport?.removeEventListener("resize", resize); window.removeEventListener("resize", resize); };
+    window.addEventListener("scroll", keepDocumentStill, { passive: true });
+    return () => {
+      root.classList.remove("portfolio-chat-active");
+      root.style.removeProperty("--app-height");
+      root.style.removeProperty("--app-top");
+      viewport?.removeEventListener("resize", resize);
+      viewport?.removeEventListener("scroll", resize);
+      window.removeEventListener("resize", resize);
+      window.removeEventListener("scroll", keepDocumentStill);
+    };
   }, []);
   useEffect(() => () => { abortRef.current?.abort(); abortRef.current = null; }, []);
 

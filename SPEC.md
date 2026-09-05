@@ -9,11 +9,11 @@
 
 Build a distinctive backend-engineering portfolio that lets visitors choose how they explore Chintan's work:
 
-1. **Visual mode** — a polished, recruiter-friendly conversational interface with cards, suggested questions, and direct navigation.
-2. **Agent CLI mode** — a keyboard-first interface inspired by modern coding agents such as Pi and Codex, with commands, streaming responses, status indicators, and transparent portfolio-data lookups.
-3. **Full profile** — a conventional, indexable professional page for visitors who do not want to use an interactive interface.
+1. **Full profile** — the default `/` experience: a conventional, indexable professional page that loads without the AI application.
+2. **Visual mode** — an opt-in, recruiter-friendly conversational interface with cards, suggested questions, and direct navigation.
+3. **Agent CLI mode** — an opt-in keyboard-first interface inspired by modern coding agents such as Pi and Codex, with commands, streaming responses, status indicators, and transparent portfolio-data lookups.
 
-Both interactive modes use the same portfolio data and AI service. Visitors can switch modes without losing their conversation.
+Selecting **Ask AI** opens `/ask`, where visitors choose Visual or CLI mode. Both interactive modes use the same portfolio data and AI service and can switch without losing their conversation.
 
 The experience should feel like a modern developer tool—not a novelty “hacker terminal.” It must communicate backend depth, quantified impact, reliability, and technical leadership within the first minute.
 
@@ -56,7 +56,7 @@ Need an approachable introduction, selected projects, writing, and straightforwa
 
 ### 5.1 Landing and mode selection
 
-On a visitor's first session, `/` displays a focused mode selector:
+The default `/` route displays the complete static profile. Selecting **Ask AI** opens `/ask`, which displays a focused mode selector:
 
 - **Launch Visual UI**
 - **Launch Agent CLI**
@@ -68,7 +68,7 @@ Requirements:
 - Support keyboard navigation and visible focus states.
 - Store the selected mode in `localStorage` only after selection.
 - Returning visitors may enter their previous mode directly, with an obvious mode switch.
-- Support URL overrides such as `/?mode=visual` and `/?mode=cli`.
+- Support URL overrides such as `/ask?mode=visual` and `/ask?mode=cli`.
 - Never trap visitors in the selector or an animation.
 - Provide “Skip animation” when an intro transition is used.
 
@@ -180,8 +180,9 @@ All wording must distinguish direct outcomes from projected or initiative-level 
 Proposed routes:
 
 ```text
-/                  Mode selector and selected interactive experience
-/profile           Full professional profile
+/                  Default full professional profile
+/ask               Mode selector and selected interactive experience
+/profile           Full professional profile alias
 /experience        Experience overview
 /experience/amazon Amazon role details
 /experience/intuit Intuit role details
@@ -576,8 +577,9 @@ No implementation work should be pushed directly to `main` without review.
 
 ### End-to-end tests
 
-- First visit → choose Visual → ask suggested question.
-- First visit → choose CLI → run `/experience`.
+- First visit → view the complete static profile → select Ask AI.
+- Ask AI → choose Visual → ask suggested question.
+- Ask AI → choose CLI → run `/experience`.
 - Enter `cat experience/amazon` and receive local data without an API call.
 - Ask a natural-language question and receive streamed output with sources.
 - Switch modes and preserve transcript.
@@ -646,7 +648,7 @@ Do not send full question text, model answers, email addresses, or résumé cont
 
 The initial release is complete when:
 
-- Visitors can choose Visual UI, Agent CLI, or Full Profile.
+- Visitors land on the Full Profile and can opt into Visual UI or Agent CLI through Ask AI.
 - Visitors can switch Visual/CLI modes without losing their current transcript.
 - Deterministic commands work without AI.
 - Natural-language questions receive grounded AI answers with validated sources.

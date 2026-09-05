@@ -24,7 +24,7 @@ import {
         <p class="lead">{identity.role} at {identity.currentCompany} · {identity.location}</p>
         <p class="lead">{identity.shortBio}</p>
         <div class="hero-actions">
-          <a class="button-primary" href="/?mode=visual">Ask my portfolio AI <span aria-hidden="true">→</span></a>
+          <a class="button-primary" href="/ask?mode=visual">Ask my portfolio AI <span aria-hidden="true">→</span></a>
           <a class="button-secondary" href={identity.resume} target="_blank">View résumé <span aria-hidden="true">↗</span></a>
           <a class="button-secondary" href={identity.links.linkedin} target="_blank" rel="noreferrer">LinkedIn</a>
         </div>
@@ -155,7 +155,7 @@ import {
         </div>
         <div class="hero-actions">
           <a class="button-primary" href={`mailto:${identity.email}`}>Start a conversation</a>
-          <a class="button-secondary" href="/?mode=cli">Open agent CLI</a>
+          <a class="button-secondary" href="/ask?mode=cli">Open agent CLI</a>
         </div>
       </div>
     </section>

@@ -110,12 +110,12 @@ const personSchema = {
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"></path></svg>
           </button>
           <nav class="site-nav" id="site-navigation" aria-label="Main navigation">
-            <a href="/profile" aria-current={path === "/profile" ? "page" : undefined}>Profile</a>
+            <a href="/profile" aria-current={path === "/" || path === "/profile" ? "page" : undefined}>Profile</a>
             <a href="/experience" aria-current={path.startsWith("/experience") ? "page" : undefined}>Experience</a>
             <a href="/projects" aria-current={path.startsWith("/projects") ? "page" : undefined}>Projects</a>
             <a href="/writing" aria-current={path.startsWith("/writing") ? "page" : undefined}>Writing</a>
             <a href="/contact" aria-current={path === "/contact" ? "page" : undefined}>Contact</a>
-            <a class="nav-chat" href="/?mode=visual">Ask AI</a>
+            <a class="nav-chat" href="/ask?mode=visual">Ask AI</a>
           </nav>
         </div>
       </header>
@@ -131,7 +131,7 @@ const personSchema = {
             <a href={identity.links.github} target="_blank" rel="noreferrer">GitHub</a>
             <a href={identity.links.linkedin} target="_blank" rel="noreferrer">LinkedIn</a>
             <a href="/privacy">Privacy</a>
-            <a href="/?mode=cli">Agent CLI</a>
+            <a href="/ask?mode=cli">Agent CLI</a>
           </nav>
         </div>
       </footer>

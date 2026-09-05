@@ -38,7 +38,7 @@ const metrics = impactMetrics.filter((metric) => metric.sourceId === role.id);
       <p class="detail-lead">This page intentionally stays within the detail approved in the public résumé. It describes engineering scope and outcomes without exposing employer-confidential implementation information.</p>
 
       <div class="hero-actions">
-        <a class="button-primary" href={`/?mode=visual&prompt=${encodeURIComponent(`Tell me about Chintan's work at ${role.company}`)}`}>Ask the portfolio AI</a>
+        <a class="button-primary" href={`/ask?mode=visual&prompt=${encodeURIComponent(`Tell me about Chintan's work at ${role.company}`)}`}>Ask the portfolio AI</a>
         <a class="button-secondary" href="/experience">All experience</a>
       </div>
     </article>

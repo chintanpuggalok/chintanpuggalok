@@ -405,26 +405,40 @@ svg {
 
 .profile-hero {
   display: grid;
-  padding: 92px 0 82px;
-  grid-template-columns: minmax(0, 1fr) 310px;
+  padding: 72px 0 82px;
+  grid-template-columns: minmax(0, 1fr);
   align-items: center;
-  gap: 80px;
+  gap: 42px;
+  text-align: center;
+}
+
+.profile-hero > div:first-child {
+  grid-row: 2;
+}
+
+.profile-hero .eyebrow,
+.profile-hero .hero-actions {
+  justify-content: center;
 }
 
 .profile-hero h1 {
-  max-width: 800px;
+  max-width: 900px;
+  margin-inline: auto;
   font-size: clamp(45px, 6vw, 72px);
 }
 
 .profile-hero .lead {
   max-width: 720px;
-  margin: 27px 0 0;
+  margin: 27px auto 0;
   color: var(--text-soft);
   font-size: 19px;
 }
 
 .profile-image-wrap {
   position: relative;
+  width: min(310px, 68vw);
+  margin-inline: auto;
+  grid-row: 1;
 }
 
 .profile-image-wrap::before {
@@ -973,8 +987,8 @@ svg {
   }
 
   .profile-hero {
-    grid-template-columns: minmax(0, 1fr) 230px;
-    gap: 44px;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 38px;
   }
 
   .timeline-item {

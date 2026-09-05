@@ -18,7 +18,7 @@ async function freshPage(width = 1440, height = 800, javaScript = true) {
 try {
   {
     const page = await freshPage(320, 800);
-    await page.goto(`${base}/`, { waitUntil: 'networkidle2' });
+    await page.goto(`${base}/ask`, { waitUntil: 'networkidle2' });
     await page.waitForSelector('[data-testid="mode-selector"]');
     const state = await page.evaluate(() => {
       const cards = [...document.querySelectorAll('.mode-card')];
@@ -88,7 +88,7 @@ try {
       ].join('');
       return request.respond({ status: 200, headers: { ...headers, 'Content-Type': 'text/event-stream' }, body });
     });
-    await page.goto(`${base}/?mode=visual`, { waitUntil: 'networkidle2' });
+    await page.goto(`${base}/ask?mode=visual`, { waitUntil: 'networkidle2' });
     await page.waitForSelector('#portfolio-prompt');
     await page.type('#portfolio-prompt', 'What has Chintan built at Amazon?');
     await page.click('[aria-label="Send message"]');
@@ -112,7 +112,7 @@ try {
       if (request.method() === 'OPTIONS') return request.respond({ status: 204, headers: { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Headers': 'Content-Type' } });
       // Keep the request pending so Escape cancellation can be tested before response headers arrive.
     });
-    await page.goto(`${base}/?mode=cli`, { waitUntil: 'domcontentloaded' });
+    await page.goto(`${base}/ask?mode=cli`, { waitUntil: 'domcontentloaded' });
     await page.waitForSelector('#portfolio-prompt');
     await page.type('#portfolio-prompt', 'Tell me about Kafka');
     await page.click('[aria-label="Send message"]');
@@ -127,7 +127,7 @@ try {
   for (const [width, height] of [[320, 360], [320, 800], [768, 800], [1440, 900]]) {
     for (const mode of ['visual', 'cli']) {
       const page = await freshPage(width, height);
-      await page.goto(`${base}/?mode=${mode}`, { waitUntil: 'networkidle2' });
+      await page.goto(`${base}/ask?mode=${mode}`, { waitUntil: 'networkidle2' });
       await page.waitForSelector('#portfolio-prompt');
       const layout = await page.evaluate(() => {
         const composer = document.querySelector('.composer').getBoundingClientRect();
@@ -145,14 +145,43 @@ try {
   }
 
   {
+    const page = await freshPage(320, 800);
+    await page.goto(`${base}/`, { waitUntil: 'networkidle2' });
+    const state = await page.evaluate(() => ({
+      hasChat: Boolean(document.querySelector('#portfolio-prompt')),
+      askHref: document.querySelector('a.nav-chat')?.getAttribute('href'),
+      portrait: (() => { const image = document.querySelector('.profile-image-wrap'); const r = image?.getBoundingClientRect(); return r ? { center: r.left + r.width / 2, viewportCenter: innerWidth / 2 } : null; })(),
+    }));
+    assert.equal(state.hasChat, false);
+    assert.equal(state.askHref, '/ask?mode=visual');
+    assert.ok(state.portrait && Math.abs(state.portrait.center - state.portrait.viewportCenter) < 2);
+    record('full profile is the default and its portrait is centered', state);
+    await page.close();
+  }
+
+  {
+    const page = await freshPage(320, 800);
+    await page.goto(`${base}/ask?mode=visual`, { waitUntil: 'networkidle2' });
+    await page.waitForSelector('#portfolio-prompt');
+    await page.focus('#portfolio-prompt');
+    await page.setViewport({ width: 320, height: 360 });
+    await new Promise(resolve => setTimeout(resolve, 150));
+    const state = await page.evaluate(() => { const r = document.querySelector('.composer').getBoundingClientRect(); return { scrollY, top: r.top, bottom: r.bottom, viewport: innerHeight }; });
+    assert.equal(state.scrollY, 0);
+    assert.ok(state.top >= 0 && state.bottom <= state.viewport + 1);
+    record('focused mobile composer stays anchored after keyboard-sized viewport resize', state);
+    await page.close();
+  }
+
+  {
     const page = await freshPage(320, 800, false);
     await page.goto(`${base}/`, { waitUntil: 'load' });
     const links = await page.$$eval('a', elements => elements.filter(element => element.getClientRects().length).map(element => element.getAttribute('href')));
-    assert.ok(links.includes('/profile'));
+    assert.ok(links.includes('/experience'));
     assert.ok(links.includes('/projects'));
     assert.ok(links.includes('/writing'));
     assert.ok(links.includes('/contact'));
-    record('no-JavaScript homepage exposes static navigation');
+    record('no-JavaScript homepage exposes the full profile and static navigation');
     await page.close();
   }
 } catch (error) {

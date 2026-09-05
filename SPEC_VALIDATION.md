@@ -10,7 +10,7 @@
 The end-to-end product described in `SPEC.md` is implemented and operational as a review build:
 
 - Astro produces 18 static pages.
-- The React homepage supports first-visit selection, Visual UI, Agent CLI, shared in-session transcript, deterministic commands, streamed AI answers, citations, cancellation, and local fallback.
+- The static full profile is the default homepage. Its portrait is centered, and the React AI application loads only after a visitor selects Ask AI and opens `/ask`.
 - The Cloudflare Worker is deployed with an encrypted OpenRouter secret, native Cloudflare rate-limit binding, strict request limits, origin checks, grounding, scope routing, SSE transformation, and safe fallback.
 - The conventional profile, role details, projects, writing, résumé, contact, privacy, redirects, metadata, sitemap, and custom-domain asset are generated.
 - All 52 automated tests pass across six test files.
@@ -55,13 +55,13 @@ Additional live checks:
 
 | Specification area | Status | Evidence / notes |
 |---|---:|---|
-| First-visit mode selector | Pass | Visual, CLI, and Full Profile paths are present and keyboard-accessible. |
+| Default full profile and opt-in AI | Pass | `/` is the static full profile with centered portrait; Ask AI opens the keyboard-accessible Visual/CLI selector at `/ask`. |
 | Remembered mode and URL overrides | Pass | `localStorage`, `?mode=visual`, and `?mode=cli` supported. |
 | Visual conversational UI | Pass | Suggested prompts, streaming, rich Markdown, tools, sources, stop control, and direct navigation implemented. |
 | Pi/Codex-inspired CLI | Pass | Transcript, bottom editor, status footer, tool blocks, slash commands, aliases, autocomplete, history, and cancellation implemented. |
 | Mode switching | Pass | Shared React state preserves transcript; integration-tested. |
 | Full static profile | Pass | Current Amazon role, Intuit history, metrics, capabilities, projects, education, recognition, and contact CTA included. |
-| Static routes and legacy redirects | Pass | Profile, experience, projects, writing, résumé, contact, privacy, old `/blogs` paths, and 404 generated. |
+| Static routes and legacy redirects | Pass | Default profile, `/ask`, `/profile`, experience, projects, writing, résumé, contact, privacy, old `/blogs` paths, and 404 generated. |
 | Structured source of truth | Pass | `shared/portfolio.ts` feeds pages, commands, AI grounding, and tests. It contains public data only. |
 | Deterministic commands | Pass | Commands avoid model calls; integration-tested. |
 | OpenRouter integration | Pass | Live free-model routing tested through deployed Worker. |

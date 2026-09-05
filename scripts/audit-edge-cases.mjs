@@ -24,7 +24,7 @@ try{
  for(const theme of ['dark','light'])for(const [width,height] of [[320,360],[320,800],[1440,800]])for(const mode of ['visual','cli']){
   const page=await browser.newPage();await page.setViewport({width,height});
   await page.evaluateOnNewDocument(t=>localStorage.setItem('portfolio-theme',t),theme);
-  await page.goto('http://127.0.0.1:4321/?mode='+mode,{waitUntil:'domcontentloaded'});await page.waitForSelector('#portfolio-prompt');
+  await page.goto('http://127.0.0.1:4321/ask?mode='+mode,{waitUntil:'domcontentloaded'});await page.waitForSelector('#portfolio-prompt');
   await page.addScriptTag({path:require.resolve('axe-core/axe.min.js')});
   const result=await page.evaluate(async()=>{
    const c=document.querySelector('.composer').getBoundingClientRect(),t=document.querySelector('[role=log]').getBoundingClientRect();

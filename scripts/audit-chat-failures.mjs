@@ -13,7 +13,7 @@ try {
    if(scenario==='rate-limit')return req.respond({status:429,headers:{...headers,'Retry-After':'60'},body:'{}'});
    return req.respond({status:200,headers:{...headers,'Content-Type':'text/event-stream'},body:'event: delta\ndata: {"text":"Partial AI answer preserved."}\n\n'});
   });
-  await page.goto('http://127.0.0.1:4321/?mode=cli');await page.waitForSelector('#portfolio-prompt');await page.type('#portfolio-prompt','What systems has Chintan built?');await page.click('[aria-label="Send message"]');
+  await page.goto('http://127.0.0.1:4321/ask?mode=cli');await page.waitForSelector('#portfolio-prompt');await page.type('#portfolio-prompt','What systems has Chintan built?');await page.click('[aria-label="Send message"]');
   await page.waitForSelector('.retry-button');
   const state=await page.evaluate(()=>{const retry=document.querySelector('.retry-button');return {log:document.querySelector('[role=log]').textContent,model:document.querySelector('.cli-model-label').textContent,retryLabel:retry.textContent,retryDisabled:retry.disabled};});
   if(scenario==='rate-limit'&&(!state.retryDisabled||!state.retryLabel.startsWith('Retry in ')))throw new Error('Rate-limit retry cooldown was not enforced');
