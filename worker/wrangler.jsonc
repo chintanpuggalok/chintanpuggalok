@@ -7,7 +7,7 @@
   "preview_urls": true,
   "vars": {
     "OPENROUTER_MODEL": "nvidia/nemotron-3-ultra-550b-a55b:free",
-    "OPENROUTER_FALLBACK_MODELS": "minimax/minimax-m3:free,z-ai/glm-5.2:free",
+    "OPENROUTER_FALLBACK_MODELS": "minimax/minimax-m3:free,z-ai/glm-5.2:free,nvidia/nemotron-3-super-120b-a12b:free,google/gemma-4-26b-a4b-it:free",
     "ALLOWED_ORIGINS": "https://chintanpuggalok.com,https://www.chintanpuggalok.com,https://feat-interactive-portfolio.chintan-portfolio-preview.pages.dev,http://localhost:4321,http://127.0.0.1:4321,http://localhost:4173,http://127.0.0.1:4173,http://100.84.216.98:4321,http://192.168.1.14:4321"
   },
   "ratelimits": [

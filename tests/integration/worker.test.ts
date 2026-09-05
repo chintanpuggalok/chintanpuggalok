@@ -25,8 +25,9 @@ describe("request and provider security",()=>{
   it("fails closed on paid/unknown model configuration",()=>{
     expect(modelCandidates({...env(),OPENROUTER_MODEL:"paid/model",OPENROUTER_FALLBACK_MODELS:`${secondary},${secondary},openrouter/free`})).toEqual([secondary]);
   });
-  it("deduplicates trimmed model IDs before applying the attempt limit",()=>{
+  it("deduplicates trimmed model IDs before applying the five-attempt limit",()=>{
     expect(modelCandidates({...env(),OPENROUTER_FALLBACK_MODELS:` ${primary},${secondary}`})).toEqual([primary,secondary]);
+    expect(modelCandidates({...env(),OPENROUTER_FALLBACK_MODELS:"a:free,b:free,c:free,d:free,e:free"})).toEqual([primary,"a:free","b:free","c:free","d:free"]);
   });
   it("does not reveal secrets through health",async()=>{
     const response=await worker.fetch(new Request("https://worker.test/health"),env());

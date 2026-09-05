@@ -5,13 +5,16 @@ export interface HistoryItem { role: "user" | "assistant"; content: string }
 export interface ProviderEnv { OPENROUTER_API_KEY?: string; OPENROUTER_MODEL: string; OPENROUTER_FALLBACK_MODELS?: string }
 export interface AgentEvent { event: "meta" | "tool" | "delta" | "sources" | "done" | "error"; data: unknown }
 
+const MAX_MODEL_ATTEMPTS = 5;
+const ATTEMPT_TIMEOUT_MS = 11_000;
+
 export function modelCandidates(env: ProviderEnv): string[] {
   // Use an explicit, reviewable free-model allowlist. Order is priority order;
-  // each failure advances to the next model within the request deadline.
+  // five 11s attempts remain inside the client's 60s request deadline.
   return [...new Set([env.OPENROUTER_MODEL, ...(env.OPENROUTER_FALLBACK_MODELS ?? "").split(",")]
     .map(model=>model.trim())
     .filter(model=>model.endsWith(":free")))]
-    .slice(0, 3);
+    .slice(0, MAX_MODEL_ATTEMPTS);
 }
 
 function prompt(sources: PortfolioSource[]): string {
@@ -45,7 +48,7 @@ export async function* providerEvents(env: ProviderEnv, question: string, histor
     const abort = new AbortController();
     const cancel = () => abort.abort();
     signal.addEventListener("abort", cancel, { once: true });
-    const timer = setTimeout(cancel, 14_000);
+    const timer = setTimeout(cancel, ATTEMPT_TIMEOUT_MS);
     let allText = "", providerDone = false;
     try {
       yield { event: "meta", data: { model } };
