@@ -1,0 +1,30 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { experience, identity } from "../../../shared/portfolio";
+---
+
+<BaseLayout title={`Experience — ${identity.name}`} description="Backend, distributed-systems, reliability, and technical-leadership experience at Amazon and Intuit.">
+  <main class="page-shell">
+    <header class="page-hero">
+      <p class="eyebrow">Experience / 2023—present</p>
+      <h1>Backend systems, owned end to end.</h1>
+      <p>Production engineering across pricing, hiring platforms, event streams, compliance, reliability, and developer enablement.</p>
+    </header>
+    <section class="section" aria-label="Professional experience">
+      <div class="timeline">
+        {experience.map((role) => (
+          <article class="timeline-item">
+            <div class="timeline-meta"><span>{role.period}</span><small>{role.location}</small></div>
+            <div class="timeline-content">
+              <h3>{role.role} <span>· {role.company}</span></h3>
+              <p>{role.summary}</p>
+              <ul>{role.highlights.map((highlight) => <li>{highlight}</li>)}</ul>
+              <div class="tag-list">{role.technologies.map((technology) => <span class="tag">{technology}</span>)}</div>
+              <a class="card-arrow" href={role.href}>Read role detail <span aria-hidden="true">→</span></a>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+  </main>
+</BaseLayout>

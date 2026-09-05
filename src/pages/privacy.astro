@@ -1,0 +1,32 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { identity } from "../../shared/portfolio";
+---
+
+<BaseLayout title={`Privacy — ${identity.name}`} description="Privacy details for the portfolio assistant and website analytics.">
+  <main class="article-shell">
+    <header class="article-header">
+      <p class="eyebrow">Privacy / Plain language</p>
+      <h1>What the portfolio processes.</h1>
+      <p>The interactive assistant is designed to answer professional questions without collecting more information than it needs.</p>
+      <div class="article-meta"><span>Last updated Sep 2026</span></div>
+    </header>
+    <article class="prose">
+      <h2>AI questions</h2>
+      <p>When you submit a natural-language question, the question and a limited recent conversation history are sent to a Cloudflare Worker and then to OpenRouter for model processing. Approved public portfolio excerpts are included so the answer can stay grounded.</p>
+      <p>Do not submit confidential, personal, or sensitive information. This portfolio does not intentionally store conversation history on its server. Infrastructure and model providers may process operational metadata under their respective policies.</p>
+
+      <h2>Local browser storage</h2>
+      <p>The website stores your selected interface mode and theme in your browser. Conversation history is kept in memory for the current page session and is not persisted across browser sessions in the initial release.</p>
+
+      <h2>Analytics</h2>
+      <p>The existing Google Analytics property remains enabled for basic site usage measurement. The website does not intentionally send question text, generated answers, email addresses, or résumé content as analytics events.</p>
+
+      <h2>Public résumé</h2>
+      <p>The downloadable résumé was explicitly approved for public access and contains the phone number supplied in that document. The phone number is not included in the assistant's knowledge context or elsewhere in page content.</p>
+
+      <h2>Contact</h2>
+      <p>Questions about this policy can be sent to <a href={`mailto:${identity.email}`}>{identity.email}</a>.</p>
+    </article>
+  </main>
+</BaseLayout>

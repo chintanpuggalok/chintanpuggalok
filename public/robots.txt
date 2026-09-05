@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://chintanpuggalok.com/sitemap-index.xml

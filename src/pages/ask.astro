@@ -1,0 +1,22 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PortfolioApp from "../components/PortfolioApp";
+import "../styles/app.css";
+import "../styles/interaction.css";
+---
+
+<BaseLayout
+  title="Chintan Puggalok — Backend Engineer Portfolio"
+  description="Explore Chintan Puggalok's distributed-systems, backend, reliability, and applied AI work through a visual assistant or agent CLI."
+  bare
+>
+  <PortfolioApp client:load />
+  <noscript>
+    <section class="page-shell page-hero">
+      <p class="eyebrow">Backend engineer · Distributed systems · Agentic AI</p>
+      <h1>Chintan Puggalok</h1>
+      <p>This interactive portfolio needs JavaScript, but the complete professional profile is available without it.</p>
+      <div class="page-hero-actions"><a class="button-primary" href="/profile">View full profile</a><a href="/projects">Projects</a><a href="/writing">Writing</a><a href="/contact">Contact</a></div>
+    </section>
+  </noscript>
+</BaseLayout>

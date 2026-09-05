@@ -1,0 +1,47 @@
+{
+  "name": "chintan-puggalok-portfolio",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev --host 0.0.0.0",
+    "build": "npm run check && astro build",
+    "check": "astro check",
+    "preview": "astro preview --host 0.0.0.0",
+    "test": "vitest run",
+    "test:unit": "vitest run tests/unit",
+    "test:integration": "vitest run tests/integration",
+    "test:smoke": "node scripts/smoke-built-site.mjs",
+    "test:watch": "vitest",
+    "validate": "npm run build && npm test && npm run test:smoke && npm --prefix worker run typecheck"
+  },
+  "dependencies": {
+    "@astrojs/react": "^5.0.7",
+    "@astrojs/sitemap": "^3.6.0",
+    "astro": "^6.4.8",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.6",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.3",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/node": "^24.3.0",
+    "@types/react": "^19.1.12",
+    "@types/react-dom": "^19.1.9",
+    "axe-core": "^4.13.0",
+    "jsdom": "^26.1.0",
+    "lighthouse": "^13.4.1",
+    "puppeteer-core": "^25.10.0",
+    "typescript": "^5.9.2",
+    "vitest": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "overrides": {
+    "esbuild": "0.28.2",
+    "sharp": "0.35.4"
+  }
+}

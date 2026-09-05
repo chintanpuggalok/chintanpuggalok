@@ -1,0 +1,27 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { identity } from "../../shared/portfolio";
+---
+
+<BaseLayout title={`Résumé — ${identity.name}`} description={`View or download ${identity.name}'s backend-engineering résumé.`}>
+  <main class="page-shell">
+    <header class="page-hero">
+      <p class="eyebrow">Résumé / Backend engineering</p>
+      <h1>Experience at a glance.</h1>
+      <p>The supplied résumé is published as approved and includes direct contact information inside the PDF.</p>
+      <div class="page-hero-actions">
+        <a class="button-primary" href={identity.resume} download>Download PDF</a>
+        <a class="button-secondary" href={identity.resume} target="_blank">Open PDF in a new tab</a>
+        <a class="button-secondary" href="/profile">View web profile</a>
+      </div>
+    </header>
+    <section class="section">
+      <div class="notice">If the embedded viewer is unavailable in your browser, use the download or open-in-new-tab action above.</div>
+      <iframe
+        src={identity.resume}
+        title={`${identity.name} résumé PDF`}
+        style="width:100%;height:80vh;min-height:650px;margin-top:20px;border:1px solid var(--line);border-radius:14px;background:white"
+      ></iframe>
+    </section>
+  </main>
+</BaseLayout>

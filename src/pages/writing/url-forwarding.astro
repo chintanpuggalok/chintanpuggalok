@@ -1,0 +1,65 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { identity } from "../../../shared/portfolio";
+---
+
+<BaseLayout
+  title={`How twitter.com Redirects to x.com — ${identity.name}`}
+  description="A practical explanation of HTTP redirects and URL forwarding using the browser network console."
+  type="article"
+>
+  <main class="article-shell">
+    <header class="article-header">
+      <p class="eyebrow">Network / HTTP</p>
+      <h1>How twitter.com redirects to x.com</h1>
+      <p>The mechanics behind URL forwarding, inspected through the browser's network console.</p>
+      <div class="article-meta"><span>Dec 29, 2024</span><span>4 min read</span></div>
+    </header>
+
+    <article class="prose">
+      <h2>Introduction</h2>
+      <p>Have you ever wondered how <code>twitter.com</code> redirects to <code>x.com</code>? We can inspect the process directly through a browser's network console.</p>
+
+      <figure>
+        <img src="/writing/url-forwarding/initiator_chain.webp" width="900" height="510" loading="lazy" alt="Browser network initiator chain beginning at twitter.com and ending at x.com" />
+        <figcaption>The request starts at twitter.com and is redirected to x.com.</figcaption>
+      </figure>
+
+      <figure>
+        <img src="/writing/url-forwarding/twitter_redirect.webp" width="900" height="510" loading="lazy" alt="Browser network panel showing a 302 redirect response from twitter.com" />
+        <figcaption>twitter.com responds with HTTP status 302 before the browser follows the new location.</figcaption>
+      </figure>
+
+      <p>When you visit <code>twitter.com</code>, the server responds with a 302 status code and a new location. The browser follows that location and requests <code>x.com</code>. This is URL forwarding through an HTTP redirect.</p>
+
+      <h2>What is URL forwarding?</h2>
+      <p>URL forwarding redirects a request from one address to another. The original server communicates the destination through an HTTP response rather than serving the final content itself.</p>
+
+      <figure>
+        <img src="/writing/url-forwarding/httpredirect.svg" width="760" height="360" loading="lazy" alt="Diagram showing a client following an HTTP redirect from one URL to another" />
+        <figcaption>A simplified HTTP redirect sequence.</figcaption>
+      </figure>
+
+      <p>MDN provides a broader reference on <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Redirections" target="_blank" rel="noreferrer">HTTP redirections and their semantics</a>.</p>
+
+      <h2>Temporary forwarding</h2>
+      <p>A temporary redirect tells clients that the resource currently lives elsewhere, while the original URL may remain canonical. HTTP 302 is commonly encountered here, while 307 preserves the original request method more explicitly.</p>
+
+      <h2>Permanent forwarding</h2>
+      <p>A permanent redirect communicates that the resource has moved for the long term. HTTP 301 and 308 are common choices. Permanent redirects help browsers, search engines, and existing bookmarks converge on the new address.</p>
+
+      <h2>A practical use</h2>
+      <p>I encountered URL forwarding while configuring a short personal subdomain to redirect visitors to a social profile. The same mechanism is useful during domain migrations, route changes, and canonicalization.</p>
+
+      <h2>Registrar and DNS-provider options</h2>
+      <ul>
+        <li><a href="https://kb.porkbun.com/article/39-how-to-set-up-url-forwarding" target="_blank" rel="noreferrer">Porkbun URL forwarding</a></li>
+        <li><a href="https://www.namecheap.com/support/knowledgebase/article.aspx/385/2237/how-to-set-up-a-url-redirect-for-a-domain/" target="_blank" rel="noreferrer">Namecheap URL redirects</a></li>
+        <li><a href="https://developers.cloudflare.com/rules/page-rules/how-to/url-forwarding/" target="_blank" rel="noreferrer">Cloudflare URL forwarding</a></li>
+      </ul>
+
+      <h2>Conclusion</h2>
+      <p>Redirects are a small but important part of web infrastructure. Choosing the appropriate temporary or permanent status preserves client behavior, search relevance, and user expectations as URLs evolve.</p>
+    </article>
+  </main>
+</BaseLayout>

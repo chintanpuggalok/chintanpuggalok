@@ -1,0 +1,35 @@
+name: Test and deploy portfolio API
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test-and-deploy:
+    runs-on: ubuntu-latest
+    environment: portfolio-api
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: worker/package-lock.json
+
+      - name: Install Worker dependencies
+        run: npm ci --prefix worker
+
+      - name: Type-check Worker
+        run: npm --prefix worker run typecheck
+
+      - name: Deploy Worker
+        working-directory: worker
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: npm run deploy

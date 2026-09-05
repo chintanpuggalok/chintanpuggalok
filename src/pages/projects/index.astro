@@ -1,0 +1,27 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { identity, projects } from "../../../shared/portfolio";
+---
+
+<BaseLayout title={`Projects — ${identity.name}`} description="Selected agentic AI, automation, and knowledge-system projects by backend engineer Chintan Puggalok.">
+  <main class="page-shell">
+    <header class="page-hero">
+      <p class="eyebrow">Selected work / Applied systems</p>
+      <h1>Projects designed around operational leverage.</h1>
+      <p>Grounded agents, knowledge systems, and automation concepts built to reduce repetitive work and improve how teams access context.</p>
+    </header>
+    <section class="section" aria-label="Selected projects">
+      <div class="project-grid">
+        {projects.map((project) => (
+          <a class="project-card" href={project.href}>
+            <span class="card-kicker">{project.period}</span>
+            <h3>{project.title}</h3>
+            <p>{project.summary}</p>
+            <div class="tag-list">{project.technologies.map((technology) => <span class="tag">{technology}</span>)}</div>
+            <span class="card-arrow">Explore project <span aria-hidden="true">→</span></span>
+          </a>
+        ))}
+      </div>
+    </section>
+  </main>
+</BaseLayout>
