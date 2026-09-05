@@ -5,10 +5,16 @@ export interface HistoryItem { role: "user" | "assistant"; content: string }
 export interface ProviderEnv { OPENROUTER_API_KEY?: string; OPENROUTER_MODEL: string; OPENROUTER_FALLBACK_MODELS?: string }
 export interface AgentEvent { event: "meta" | "tool" | "delta" | "sources" | "done" | "error"; data: unknown }
 
+const FREE_ROUTER = "openrouter/free";
+
 export function modelCandidates(env: ProviderEnv): string[] {
-  // Fail closed to free-only IDs, including config mistakes. Never silently bill a paid model.
+  // The router is OpenRouter's dynamic best-available free route. Explicit free
+  // models remain as deterministic fallbacks when the router is saturated or
+  // returns output that fails our citation checks. Never permit paid IDs.
   return [...new Set([env.OPENROUTER_MODEL, ...(env.OPENROUTER_FALLBACK_MODELS ?? "").split(",")])]
-    .map(m=>m.trim()).filter(m=>m.endsWith(":free")).slice(0, 3);
+    .map(m=>m.trim())
+    .filter(m=>m === FREE_ROUTER || m.endsWith(":free"))
+    .slice(0, 3);
 }
 
 function prompt(sources: PortfolioSource[]): string {

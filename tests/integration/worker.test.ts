@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import worker, { validateChatRequest } from "../../worker/src/index";
 import { modelCandidates } from "../../worker/src/provider";
-const primary="nvidia/nemotron-3-ultra-550b-a55b:free", secondary="z-ai/glm-5.2:free";
+const primary="openrouter/free", secondary="z-ai/glm-5.2:free";
 function env(overrides={}) {return {OPENROUTER_API_KEY:"test-key",OPENROUTER_MODEL:primary,ALLOWED_ORIGINS:"http://localhost:4321",CHAT_RATE_LIMITER:{limit:vi.fn().mockResolvedValue({success:true})},...overrides};}
 function request(message:unknown="Amazon work", extras:Record<string,unknown>={}, headers:Record<string,string>={}) {
   return new Request("https://worker.test/api/chat",{method:"POST",headers:{Origin:"http://localhost:4321","Content-Type":"application/json",...headers},body:JSON.stringify({message,mode:"visual",history:[],...extras})});
@@ -23,7 +23,7 @@ describe("request and provider security",()=>{
     {message:"hi",mode:"visual",history:Array(5).fill({role:"user",content:"x".repeat(1500)})},
   ])("rejects invalid message/history %#",body=>expect(validateChatRequest(body).error).toBeTruthy());
   it("fails closed on paid/unknown model configuration",()=>{
-    expect(modelCandidates({...env(),OPENROUTER_MODEL:"paid/model",OPENROUTER_FALLBACK_MODELS:`${secondary},${secondary},openrouter/free`})).toEqual([secondary]);
+    expect(modelCandidates({...env(),OPENROUTER_MODEL:"paid/model",OPENROUTER_FALLBACK_MODELS:`${secondary},${secondary},openrouter/free`})).toEqual([secondary,"openrouter/free"]);
   });
   it("does not reveal secrets through health",async()=>{
     const response=await worker.fetch(new Request("https://worker.test/health"),env());
