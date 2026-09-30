@@ -1,0 +1,38 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const title = "Free Indian Passport Photo Maker — 35 × 45 mm Photo Sheet";
+const description = "Prepare a 35 × 45 mm Indian passport-style photo and arrange copies on an A4 sheet. Crop and export in your browser; photos are not uploaded to the app's server.";
+---
+
+<BaseLayout title={title} description={description}>
+  <main class="page-shell">
+    <header class="page-hero">
+      <p class="eyebrow">Free browser tool · Indian passport-style photo</p>
+      <h1>Make a print-ready passport photo sheet</h1>
+      <p>Prepare a 35 × 45 mm portrait, arrange multiple copies on A4, and download a PDF or JPEG for printing. No image editor required.</p>
+      <p><a class="button button-primary" href="https://create-passport-photo.chintanpuggalok.com/" target="_blank" rel="noreferrer">Open the free photo maker <span aria-hidden="true">→</span></a></p>
+    </header>
+
+    <section class="section" aria-labelledby="steps-heading">
+      <h2 id="steps-heading">How to make your photo sheet</h2>
+      <ol>
+        <li>Choose a clear, recent portrait from your device.</li>
+        <li>Position and crop the photo in the editor; review the framing yourself.</li>
+        <li>Download the A4 PDF or JPEG and print at 100% / Actual size.</li>
+      </ol>
+      <p>Check the instructions for your specific passport application before printing. Requirements can vary by application and authority.</p>
+    </section>
+
+    <section class="section" aria-labelledby="privacy-heading">
+      <h2 id="privacy-heading">Your photo stays in your browser</h2>
+      <p>Photo editing and export happen locally in your browser. The app's server does not receive your portrait or exported PDF. Drafts may be saved in browser storage on your device; clear saved photos before sharing a device.</p>
+    </section>
+
+    <section class="section" aria-labelledby="limits-heading">
+      <h2 id="limits-heading">A preparation tool, not an official validator</h2>
+      <p>The tool helps crop a portrait and prepare a print layout. It cannot confirm that a photo meets every official requirement or will be accepted. Follow the latest <a href="https://www.passportindia.gov.in/" target="_blank" rel="noreferrer">Passport Seva guidance</a> for your application.</p>
+      <p>Read the <a href="/writing/building-a-private-indian-passport-photo-tool/">build story and technical details</a>.</p>
+    </section>
+  </main>
+</BaseLayout>
