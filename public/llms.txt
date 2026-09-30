@@ -1,0 +1,22 @@
+# Chintan Puggalok
+
+> Software Development Engineer II in Bengaluru, India, writing about backend systems, distributed software, web infrastructure, privacy-conscious product engineering, and applied AI.
+
+## Main pages
+
+- [Professional profile](https://chintanpuggalok.com/profile)
+- [Experience](https://chintanpuggalok.com/experience)
+- [Projects](https://chintanpuggalok.com/projects)
+- [Engineering writing](https://chintanpuggalok.com/writing)
+- [Contact](https://chintanpuggalok.com/contact)
+
+## Articles
+
+- [How I built a privacy-first Indian passport photo maker](https://chintanpuggalok.com/writing/building-a-private-indian-passport-photo-tool/): browser-based image processing, A4 PDF/JPEG export, testing, privacy decisions, measured model experiments, and a proposed native-mobile roadmap.
+- [How twitter.com redirects to x.com](https://chintanpuggalok.com/writing/url-forwarding): HTTP redirects inspected through the browser network panel.
+
+## Official profiles
+
+- [GitHub](https://github.com/chintanpuggalok)
+- [LinkedIn](https://www.linkedin.com/in/chintanpuggalok)
+- [DEV Community](https://dev.to/chintanpuggalok)

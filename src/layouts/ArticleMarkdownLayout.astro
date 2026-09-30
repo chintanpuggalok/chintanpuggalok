@@ -1,0 +1,24 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+
+const { frontmatter } = Astro.props;
+---
+
+<BaseLayout
+  title={`${frontmatter.title} — Chintan Puggalok`}
+  description={frontmatter.description}
+  image="https://create-passport-photo.chintanpuggalok.com/social-card.jpg"
+  type="article"
+  publishedTime={frontmatter.publishedTime}
+  modifiedTime={frontmatter.modifiedTime}
+>
+  <main class="article-shell">
+    <header class="article-header">
+      <p class="eyebrow">Engineering / Product build</p>
+      <h1>{frontmatter.title}</h1>
+      <p>{frontmatter.description}</p>
+      <div class="article-meta"><span>By Chintan Puggalok</span><span>Sep 30, 2026</span><span>8 min read</span></div>
+    </header>
+    <article class="prose"><slot /></article>
+  </main>
+</BaseLayout>
