@@ -3,7 +3,7 @@ layout: ../../layouts/ArticleMarkdownLayout.astro
 title: "How I Built a Privacy-First Indian Passport Photo Maker"
 description: "The full build journey: browser-based photo editing, print-ready A4 exports, cross-browser testing, privacy trade-offs, and the measured roadmap for mobile."
 publishedTime: "2026-09-30"
-modifiedTime: "2026-09-30"
+modifiedTime: "2026-10-06"
 ---
 
 I built [Passport Photo Sheet India](https://create-passport-photo.chintanpuggalok.com/) to make one small but stressful task easier: turn a portrait into a correctly sized photo sheet without having to learn an image editor or upload a personal photo to a server.
@@ -79,3 +79,8 @@ The result is still evolving. The web version solves the immediate print-sheet w
 **Does this tool guarantee a passport photo will be accepted?** No. It prepares a 35 × 45 mm layout and offers framing advice; it is not an official validator. Check the instructions for the exact application or mission.
 
 **Is there a native phone app today?** No. The current product is a web app. Native inference is a proposed next step, gated on real-device quality and total-memory tests.
+
+## Further reading
+
+- [Passport photo sizes and printing a 35 × 45 mm sheet on A4](/writing/passport-photo-size-a4-printing/): practical preparation and printing steps, with application-specific requirements kept separate.
+- [Local photo processing, privacy, and tests that catch real failures](/writing/local-photo-processing-privacy-testing/): an October 6 follow-up on draft portability, safe diagnostics, and the test-priority audit.

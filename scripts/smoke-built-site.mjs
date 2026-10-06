@@ -13,6 +13,11 @@ const requiredFiles = [
   "projects/ticketing-analysis-agent/index.html",
   "writing/index.html",
   "writing/url-forwarding/index.html",
+  "create-passport-photo/index.html",
+  "writing/building-a-private-indian-passport-photo-tool/index.html",
+  "writing/passport-photo-size-a4-printing/index.html",
+  "writing/local-photo-processing-privacy-testing/index.html",
+  "llms.txt",
   "resume/index.html",
   "contact/index.html",
   "privacy/index.html",
@@ -43,12 +48,32 @@ const expectations = [
   [profile.includes("rel=\"canonical\""), "canonical metadata is missing"],
   [home.includes("1.4M+"), "default homepage does not contain the full profile"],
   [home.includes("/ask?mode=visual"), "default homepage Ask AI link is missing"],
+  [home.includes('id="builds"') && home.includes('href="/create-passport-photo/"') && home.includes('href="/passport-photo-maker"'), "homepage build discovery/tool links are missing"],
   [!home.includes("PortfolioApp"), "default homepage unexpectedly loads the AI application"],
   [ask.includes("PortfolioApp"), "Ask AI hydration marker is missing"],
   [ask.includes("View full profile"), "Ask AI no-JavaScript profile fallback is missing"],
   [privacy.includes("OpenRouter"), "AI privacy disclosure is missing"],
 ];
 for (const [condition, message] of expectations) if (!condition) failures.push(message);
+
+const writing = await readFile(new URL('writing/index.html', dist), 'utf8');
+const tool = await readFile(new URL('create-passport-photo/index.html', dist), 'utf8');
+const agentIndex = await readFile(new URL('llms.txt', dist), 'utf8');
+const sitemap = await readFile(new URL('sitemap-0.xml', dist), 'utf8');
+for (const slug of ['passport-photo-size-a4-printing', 'local-photo-processing-privacy-testing']) {
+  const path = `/writing/${slug}/`;
+  for (const [name, content] of [['homepage', home], ['writing index', writing], ['tool page', tool], ['agent index', agentIndex], ['sitemap', sitemap]]) {
+    if (!content.includes(path.replace(/\/$/, ''))) failures.push(`${name} does not link/index ${path}`);
+  }
+  const article = await readFile(new URL(`writing/${slug}/index.html`, dist), 'utf8');
+  if (!article.includes('href="/passport-photo-maker"')) failures.push(`${slug}: tool CTA missing`);
+  if (!article.includes('datetime="2026-10-06"') || article.includes('Sep 30, 2026')) failures.push(`${slug}: stale publication date`);
+  if (!article.includes('not an official') && !article.includes('cannot guarantee official')) failures.push(`${slug}: acceptance limitation missing`);
+  if (article.includes('PortfolioApp')) failures.push(`${slug}: unexpectedly loads the AI app`);
+  const schemas = [...article.matchAll(/<script[^>]*type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/g)].map(match => JSON.parse(match[1]));
+  const metadata = schemas.flatMap(schema => schema['@graph'] || [schema]).find(schema => schema['@type'] === 'Article');
+  if (!metadata || metadata.datePublished !== '2026-10-06' || !metadata.mainEntityOfPage.includes(path.replace(/\/$/, ''))) failures.push(`${slug}: article structured data missing/incorrect`);
+}
 
 async function listFiles(directory) {
   const entries = await readdir(directory, { withFileTypes: true });
