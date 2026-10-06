@@ -15,8 +15,6 @@ const requiredFiles = [
   "writing/url-forwarding/index.html",
   "create-passport-photo/index.html",
   "writing/building-a-private-indian-passport-photo-tool/index.html",
-  "writing/passport-photo-size-a4-printing/index.html",
-  "writing/local-photo-processing-privacy-testing/index.html",
   "llms.txt",
   "resume/index.html",
   "contact/index.html",
@@ -60,19 +58,23 @@ const writing = await readFile(new URL('writing/index.html', dist), 'utf8');
 const tool = await readFile(new URL('create-passport-photo/index.html', dist), 'utf8');
 const agentIndex = await readFile(new URL('llms.txt', dist), 'utf8');
 const sitemap = await readFile(new URL('sitemap-0.xml', dist), 'utf8');
-for (const slug of ['passport-photo-size-a4-printing', 'local-photo-processing-privacy-testing']) {
+const retiredArticles = ['passport-photo-size-a4-printing', 'local-photo-processing-privacy-testing'];
+if ((writing.match(/class="writing-card" href="\/writing\/[^\"]*passport[^\"]*"/g) || []).length !== 1) failures.push('Writing must list only one passport-photo article');
+if (!tool.includes('Free Indian passport photo maker by Chintan Puggalok.')) failures.push('Dedicated tool search description missing');
+for (const slug of ['building-a-private-indian-passport-photo-tool']) {
   const path = `/writing/${slug}/`;
   for (const [name, content] of [['homepage', home], ['writing index', writing], ['tool page', tool], ['agent index', agentIndex], ['sitemap', sitemap]]) {
     if (!content.includes(path.replace(/\/$/, ''))) failures.push(`${name} does not link/index ${path}`);
   }
   const article = await readFile(new URL(`writing/${slug}/index.html`, dist), 'utf8');
   if (!article.includes('href="/passport-photo-maker"')) failures.push(`${slug}: tool CTA missing`);
-  if (!article.includes('datetime="2026-10-06"') || article.includes('Sep 30, 2026')) failures.push(`${slug}: stale publication date`);
+  if (!article.includes('datetime="2026-09-30"')) failures.push(`${slug}: original publication date lost`);
+  if (!article.includes('id="photo-sizing-and-printing"') || !article.includes('Draft persistence across browsers')) failures.push(`${slug}: consolidated guidance missing`);
   if (!article.includes('not an official') && !article.includes('cannot guarantee official')) failures.push(`${slug}: acceptance limitation missing`);
   if (article.includes('PortfolioApp')) failures.push(`${slug}: unexpectedly loads the AI app`);
   const schemas = [...article.matchAll(/<script[^>]*type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/g)].map(match => JSON.parse(match[1]));
   const metadata = schemas.flatMap(schema => schema['@graph'] || [schema]).find(schema => schema['@type'] === 'Article');
-  if (!metadata || metadata.datePublished !== '2026-10-06' || !metadata.mainEntityOfPage.includes(path.replace(/\/$/, ''))) failures.push(`${slug}: article structured data missing/incorrect`);
+  if (!metadata || metadata.datePublished !== '2026-09-30' || metadata.dateModified !== '2026-10-06' || !metadata.mainEntityOfPage.includes(path.replace(/\/$/, ''))) failures.push(`${slug}: article structured data missing/incorrect`);
 }
 
 async function listFiles(directory) {
@@ -87,6 +89,7 @@ async function listFiles(directory) {
 const textFiles = (await listFiles(dist.pathname)).filter((file) => /\.(?:html|js|css|xml|txt|json)$/i.test(file));
 for (const file of textFiles) {
   const text = await readFile(file, "utf8");
+  for (const slug of retiredArticles) if (text.includes(`/writing/${slug}`)) failures.push(`retired article still linked/indexed: ${file.replace(dist.pathname, '')}`);
   if (text.includes("8527162716") || text.includes("+918527162716")) {
     failures.push(`phone number leaked into generated text asset: ${file.replace(dist.pathname, "")}`);
   }
