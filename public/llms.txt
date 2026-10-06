@@ -14,9 +14,7 @@
 
 ## Articles
 
-- [Passport photo sizes and A4 printing](https://chintanpuggalok.com/writing/passport-photo-size-a4-printing/): application-specific dimensions, 300 DPI calculations, Actual size printing, and privacy limits.
-- [Local photo processing, privacy and testing](https://chintanpuggalok.com/writing/local-photo-processing-privacy-testing/): WebKit storage portability, encoded drafts, safe resource diagnostics, and prioritized browser-flow tests.
-- [How I built a privacy-first Indian passport photo maker](https://chintanpuggalok.com/writing/building-a-private-indian-passport-photo-tool/): browser-based image processing, A4 PDF/JPEG export, testing, privacy decisions, measured model experiments, and a proposed native-mobile roadmap.
+- [How I built a privacy-first Indian passport photo maker](https://chintanpuggalok.com/writing/building-a-private-indian-passport-photo-tool/): the single consolidated article covering photo sizing, 300 DPI/A4 printing, browser-based processing, WebKit drafts, safe diagnostics, prioritized tests, measured model experiments, and the proposed native-mobile roadmap.
 - [How twitter.com redirects to x.com](https://chintanpuggalok.com/writing/url-forwarding): HTTP redirects inspected through the browser network panel.
 
 ## Official profiles

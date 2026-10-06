@@ -1,7 +1,8 @@
 ---
 layout: ../../layouts/ArticleMarkdownLayout.astro
 title: "How I Built a Privacy-First Indian Passport Photo Maker"
-description: "The full build journey: browser-based photo editing, print-ready A4 exports, cross-browser testing, privacy trade-offs, and the measured roadmap for mobile."
+description: "How Chintan Puggalok built a free Indian passport photo maker: local photo editing, 35 × 45 mm and A4 printing, browser privacy, testing, and the mobile roadmap."
+readingTime: "12 min read"
 publishedTime: "2026-09-30"
 modifiedTime: "2026-10-06"
 ---
@@ -22,6 +23,29 @@ The first version focused on the complete useful path: choose a portrait, crop i
 
 Print output quickly became the real correctness test. A preview that looks right is not enough if a PDF is clipped, scaled by the browser, or has a different layout from the JPEG. I consolidated export around one rendered A4 sheet so the PDF, 300 DPI JPEG, and print action share the same geometry. Regression checks cover the PDF bounds, page size, and image dimensions. The print guidance tells people to choose Actual size / 100%, not “Fit to page.”
 
+## Photo sizing and printing
+
+The default 35 × 45 mm preset is a **tool format, not a universal requirement** for every Indian passport, visa, appointment, or overseas mission. First check [Passport Seva](https://www.passportindia.gov.in/) or the relevant mission's instructions: do you need a carried print, a digital upload with specified pixels and file size, or a photo taken at the appointment?
+
+For printing, millimetres describe physical size and pixels describe raster dimensions:
+
+```text
+pixels = millimetres ÷ 25.4 × dots per inch
+```
+
+At 300 DPI, 35 × 45 mm is approximately **413 × 531 pixels**, after rounding. A4 is **210 × 297 mm**, approximately **2480 × 3508 pixels** at the same resolution. These are print calculations, not official digital-upload specifications. Changing DPI metadata does not restore detail to a blurry source.
+
+To [make your photo sheet](/passport-photo-maker):
+
+1. Choose a clear portrait. Common browser image formats and local HEIC/HEIF conversion are supported; AVIF availability depends on the browser's codec.
+2. Review automatic background preparation and alignment. Keep the original if the result damages hair or clothing, and adjust zoom, position, rotation, and straightening yourself.
+3. Check the dimensions and sheet settings. The default 35 × 45 mm photos, 5 mm page margins, and 3 mm gaps fit **5 columns × 6 rows: 30 copies** on A4. Custom sizes, margins, and gaps change that count.
+4. Choose border and cut-line settings against your application instructions. A trimming aid is not an acceptance requirement.
+5. Download the A4 PDF for the sheet, or the single-photo JPEG if your workflow specifically requires an individual image. They are different exports.
+6. Print on **A4 at Actual size / 100%**, not Fit to page or shrink-to-printable-area. Measure a sample with a ruler before printing the batch: viewers, drivers, and print services can override scaling preferences.
+
+A stretched face needs a new crop at the required proportion, not independent resizing of width and height. A soft portrait needs a better original, not just more output pixels. Readiness to export is not official acceptance. The tool does not place printing orders; provider availability and installed-app handoff depend on your service, location, and device.
+
 ## Make alignment useful, but keep it editable
 
 The next challenge was reducing the image-editing knowledge a first-time user needs. I added on-device face and eye detection, background segmentation, white compositing, and automatic framing. The app uses face geometry and the selected photo shape to estimate scale and eye level, then aligns the head against a guide. The user can still drag, zoom, rotate, and straighten the result; automatic output is a starting point, not a locked decision.
@@ -36,17 +60,43 @@ Memory needed its own guardrails. The current app accepts uploads up to 40 MB, r
 
 The UI also saves an in-progress draft in IndexedDB so the user can return after opening the print flow. That convenience comes with a privacy responsibility: explain local persistence in the interface and make clearing saved photos easy, especially on shared devices.
 
+### Draft persistence across browsers
+
+The October 6 audit exposed a portability assumption: an iPhone WebKit test runtime accepted ordinary IndexedDB objects and byte buffers but rejected Blob writes. That is not evidence that every physical iPhone fails the same way, but it justified a more portable storage format.
+
+The shared writer now saves encoded ArrayBuffers alongside MIME types, reconstructs Blobs on reads, and supports older Blob records. Tests restore zoom, fine rotation, and sheet margins—not just a visible workspace. A clear-generation guard also prevents an asynchronous write from repopulating drafts after the user clears saved photos; the regression deliberately pauses encoding, clears storage, and then releases the pending write.
+
 ## Testing the whole flow, not just the happy path
 
 The browser differences showed up in places unit tests could not catch. The project now has unit tests for layout math, framing, image metadata, PDF generation, and payment validation, alongside Playwright flows for uploads, editing, and export. Browser coverage includes Chromium, Firefox, and WebKit profiles, plus cases for EXIF orientation, HEIC conversion, oversized photos, transparent inputs, cancellation, and output geometry.
 
 Some platform behaviors still cannot be proven by desktop automation. For example, a browser cannot reliably inspect which print apps are installed or force a PDF into a particular app. The app downloads the PDF first and presents provider destinations afterward; installed-app handoff depends on the device and operating system. That is less magical than pretending to control the handoff, but it is more honest and testable.
 
+### Prioritize essential paths, not just test counts
+
+The audit strengthened assertions that had previously checked less than their names suggested. Print PDF now clicks the action and inspects a real A4 PDF Blob in a mocked popup. Payment tests submit all three support presets and the minimum custom amount; an order-error retry actually completes a second successful mocked verification.
+
+Cases are classified high or low priority. Core upload/edit/export, privacy, payment validation, and data-loss protections remain high, including important failure paths. Small, low-risk presentation changes can use a representative Chromium/Firefox/iPhone WebKit gate; processing, storage, payment, API, CSP/security, dependency, gate, and release changes still require the full suite.
+
+On October 6, the shorter gate covered **62 selected unit cases and 166 browser executions**, with the browser portion taking about five minutes. The complete gate passed **76 unit cases and 978 browser executions**. Repeated profiles are executions, not independent features. This runner lacks Firefox WebGL, so actual inference is required in Chromium and WebKit; Firefox still exercises editing, storage, fallback, and exports. See the [case audit and remaining gaps](https://github.com/chintanpuggalok/passport-photos/blob/main/test/TEST_PRIORITY_AUDIT.md).
+
+Mocked payments do not establish live card or UPI settlement. Synthetic geometry and successful segmentation do not establish quality across every skin tone, hairstyle, or real portrait. User-agent profiles and mocked sharing are not physical-device, native-app, or printer certification.
+
 ## Payments and observability without moving photos server-side
 
 Photo creation and downloads stay free. I added an optional one-time Razorpay contribution flow to help support hosting. Order creation and payment-signature verification happen in the Worker, with credentials kept server-side; there is no account system or photo storage service.
 
 I also added bounded failure diagnostics for issues such as image preparation, PDF export, and payment. The reports use allowlisted categories and limited technical metadata. They do not contain image bytes, filenames, arbitrary error messages, or stacks. This helps investigate failures without turning photo content into debugging data.
+
+### Make error reports useful without exposing photos
+
+Historical Cloudflare CSP/resource reports lacked the blocked URL. Current Chromium/Firefox/WebKit production probes loaded checkout without CSP violations or page errors, while observing a failing speculative Razorpay SDK `build/undefined` request. Neither observation proves every historical cause; widening CSP to silence warnings would be the wrong response.
+
+Reports now include fixed resource labels such as `google_tag`, `razorpay_static`, and `vision_asset`, never raw URLs or query strings. The Worker validates the labels and accepts older clients. Locally handled image-decoder rejection is not mislabeled as a script failure, and speculative links are not confused with execution failures; actual resource and enforced CSP failures still report.
+
+Deferring diagnostics also needed an early-error guard. A small listener temporarily queues up to ten events, then the deferred collector removes those listeners, deletes the queue, and applies the same privacy filters to buffered and subsequent failures. A regression aborts the Google tag while delaying the collector, rather than merely checking for a `defer` attribute.
+
+Local processing does not mean zero network traffic: code/models, analytics, optional support payments, and bounded diagnostics still use the network. Nor does it mean zero local persistence: clear saved photos on shared devices and keep your original file separately, since stored sources are bounded for memory safety.
 
 ## What the measurements say—and do not say
 
@@ -80,7 +130,4 @@ The result is still evolving. The web version solves the immediate print-sheet w
 
 **Is there a native phone app today?** No. The current product is a web app. Native inference is a proposed next step, gated on real-device quality and total-memory tests.
 
-## Further reading
-
-- [Passport photo sizes and printing a 35 × 45 mm sheet on A4](/writing/passport-photo-size-a4-printing/): practical preparation and printing steps, with application-specific requirements kept separate.
-- [Local photo processing, privacy, and tests that catch real failures](/writing/local-photo-processing-privacy-testing/): an October 6 follow-up on draft portability, safe diagnostics, and the test-priority audit.
+[Open the free passport photo maker](/passport-photo-maker) or inspect the [source repository](https://github.com/chintanpuggalok/passport-photos). This article combines the original build journey with the October 6 printing, storage, diagnostics, and testing updates.
