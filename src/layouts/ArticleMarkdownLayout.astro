@@ -2,6 +2,7 @@
 import BaseLayout from "./BaseLayout.astro";
 
 const { frontmatter } = Astro.props;
+const publishedDate = new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' }).format(new Date(frontmatter.publishedTime));
 ---
 
 <BaseLayout
@@ -14,10 +15,10 @@ const { frontmatter } = Astro.props;
 >
   <main class="article-shell">
     <header class="article-header">
-      <p class="eyebrow">Engineering / Product build</p>
+      <p class="eyebrow">{frontmatter.category || 'Engineering / Product build'}</p>
       <h1>{frontmatter.title}</h1>
       <p>{frontmatter.description}</p>
-      <div class="article-meta"><span>By Chintan Puggalok</span><span>Sep 30, 2026</span><span>8 min read</span></div>
+      <div class="article-meta"><span>By Chintan Puggalok</span><time datetime={frontmatter.publishedTime}>{publishedDate}</time><span>{frontmatter.readingTime || '8 min read'}</span></div>
     </header>
     <article class="prose"><slot /></article>
   </main>
