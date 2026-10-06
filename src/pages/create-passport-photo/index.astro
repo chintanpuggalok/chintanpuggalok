@@ -1,15 +1,15 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 
-const title = "Free Indian Passport Photo Maker — 35 × 45 mm Photo Sheet";
-const description = "Free Indian passport photo maker by Chintan Puggalok. Crop photos, remove backgrounds locally, and download A4 PDFs or 300 DPI JPEGs.";
+const title = "35 × 45 mm Passport Photo Sheet — Free A4 Print Tool";
+const description = "Make a 35 × 45 mm passport photo sheet for A4 printing. Compare PDF and JPEG outputs, see an illustrated example, and open Chintan Puggalok's free browser tool.";
 ---
 
 <BaseLayout title={title} description={description}>
   <main class="page-shell">
     <header class="page-hero">
       <p class="eyebrow">Free browser tool · Indian passport-style photo</p>
-      <h1>Make a print-ready passport photo sheet</h1>
+      <h1>Make a 35 × 45 mm passport photo sheet on A4</h1>
       <p>Prepare a 35 × 45 mm portrait, arrange multiple copies on A4, and download a PDF or JPEG for printing. No image editor required.</p>
       <p><a class="button button-primary" href="https://create-passport-photo.chintanpuggalok.com/" target="_blank" rel="noreferrer">Open the free photo maker <span aria-hidden="true">→</span></a></p>
     </header>
@@ -22,6 +22,28 @@ const description = "Free Indian passport photo maker by Chintan Puggalok. Crop 
         <li>Download the A4 PDF or JPEG and print at 100% / Actual size.</li>
       </ol>
       <p>Check the instructions for your specific passport application before printing. Requirements can vary by application and authority.</p>
+    </section>
+
+    <section class="section" aria-labelledby="example-heading">
+      <h2 id="example-heading">See the photo-to-sheet workflow</h2>
+      <figure>
+        <img src="https://create-passport-photo.chintanpuggalok.com/demo-showcase.jpg" width="960" height="480" loading="lazy" decoding="async" style="display:block;max-width:100%;height:auto" alt="Synthetic portrait, white-background crop, and an A4 print sheet of 30 copies" />
+        <figcaption>Original illustration → white-background crop → A4 sheet. This is a synthetic workflow illustration, not proof of AI quality or official acceptance.</figcaption>
+      </figure>
+      <p><a href="https://create-passport-photo.chintanpuggalok.com/demo-portrait.jpg">View the small demo JPG (9 KB)</a>. No real person's photo is used.</p>
+    </section>
+
+    <section class="section" aria-labelledby="outputs-heading">
+      <h2 id="outputs-heading">Choose the right download and print settings</h2>
+      <ul>
+        <li><strong>Single-photo JPEG:</strong> one cropped image at 300 DPI. A print JPEG does not automatically meet an online portal's pixel dimensions or file-size limits.</li>
+        <li><strong>A4 PDF:</strong> a sheet containing multiple copies, ready to save or hand to a print service.</li>
+        <li><strong>A4 JPEG:</strong> the same arranged sheet as an image, not an individual photo.</li>
+      </ul>
+      <p>The default 35 × 45 mm photos, 5 mm page margin and 3 mm gaps fit 30 copies: 5 columns × 6 rows. Custom dimensions, margins and gaps change the count.</p>
+      <p>Print on A4 at <strong>Actual size / 100%</strong>, with Fit to page and automatic shrinking turned off. Measure a sample with a ruler before printing a batch: the printer or service can override your settings.</p>
+      <p>The tool works with common phone-image formats and local HEIC/HEIF conversion; AVIF depends on the browser. Editing and downloads are free, with no account or watermark. Contributions are optional.</p>
+      <p>Read the <a href="/writing/building-a-private-indian-passport-photo-tool/#photo-sizing-and-printing">photo sizing and A4 printing section</a> of the original build article for the full guide.</p>
     </section>
 
     <section class="section" aria-labelledby="privacy-heading">

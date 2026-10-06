@@ -60,7 +60,8 @@ const agentIndex = await readFile(new URL('llms.txt', dist), 'utf8');
 const sitemap = await readFile(new URL('sitemap-0.xml', dist), 'utf8');
 const retiredArticles = ['passport-photo-size-a4-printing', 'local-photo-processing-privacy-testing'];
 if ((writing.match(/class="writing-card" href="\/writing\/[^\"]*passport[^\"]*"/g) || []).length !== 1) failures.push('Writing must list only one passport-photo article');
-if (!tool.includes('Free Indian passport photo maker by Chintan Puggalok.')) failures.push('Dedicated tool search description missing');
+if (!tool.includes('Make a 35 × 45 mm passport photo sheet for A4 printing.')) failures.push('Dedicated print-sheet search description missing');
+if (!tool.includes('demo-showcase.jpg') || !tool.includes('synthetic workflow illustration') || !tool.includes('Single-photo JPEG')) failures.push('Tool landing demo/output guidance missing');
 for (const slug of ['building-a-private-indian-passport-photo-tool']) {
   const path = `/writing/${slug}/`;
   for (const [name, content] of [['homepage', home], ['writing index', writing], ['tool page', tool], ['agent index', agentIndex], ['sitemap', sitemap]]) {
