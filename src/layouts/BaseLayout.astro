@@ -9,6 +9,7 @@ interface Props {
   type?: "website" | "article" | "profile";
   publishedTime?: string;
   modifiedTime?: string;
+  canonical?: string;
   bare?: boolean;
 }
 
@@ -19,10 +20,11 @@ const {
   type = "website",
   publishedTime,
   modifiedTime = publishedTime,
+  canonical: canonicalOverride,
   bare = false,
 } = Astro.props;
 
-const canonical = new URL(Astro.url.pathname, Astro.site);
+const canonical = canonicalOverride ? new URL(canonicalOverride) : new URL(Astro.url.pathname, Astro.site);
 const absoluteImage = new URL(image, Astro.site);
 const path = Astro.url.pathname.replace(/\/$/, "") || "/";
 const personSchema = {
