@@ -35,7 +35,7 @@ pixels = millimetres ÷ 25.4 × dots per inch
 
 At 300 DPI, 35 × 45 mm is approximately **413 × 531 pixels**, after rounding. A4 is **210 × 297 mm**, approximately **2480 × 3508 pixels** at the same resolution. These are print calculations, not official digital-upload specifications. Changing DPI metadata does not restore detail to a blurry source.
 
-To [make your photo sheet](/passport-photo-maker):
+To [make your photo sheet](https://passport.chintanpuggalok.com/):
 
 1. Choose a clear portrait. Common browser image formats and local HEIC/HEIF conversion are supported; AVIF availability depends on the browser's codec.
 2. Review automatic background preparation and alignment. Keep the original if the result damages hair or clothing, and adjust zoom, position, rotation, and straightening yourself.
@@ -186,4 +186,4 @@ The result is still evolving. The web version solves the immediate print-sheet w
 
 **Can I print the sheet online?** Yes. Download the A4 PDF, upload it to a service that accepts PDFs, and confirm A4 at Actual size / 100%. The app can hand off to supported print providers where available, but it does not place the order.
 
-[Open the free passport photo maker](/passport-photo-maker) or inspect the [source repository](https://github.com/chintanpuggalok/passport-photos). This article combines the original build journey with the October 6 printing, storage, diagnostics, and testing updates, plus the November 5 A4 template and print checklist.
+[Open the free passport photo maker](https://passport.chintanpuggalok.com/) or inspect the [source repository](https://github.com/chintanpuggalok/passport-photos). This article combines the original build journey with the October 6 printing, storage, diagnostics, and testing updates, plus the November 5 A4 template and print checklist.
