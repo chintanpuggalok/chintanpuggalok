@@ -58,9 +58,11 @@ const writing = await readFile(new URL('writing/index.html', dist), 'utf8');
 const tool = await readFile(new URL('create-passport-photo/index.html', dist), 'utf8');
 const agentIndex = await readFile(new URL('llms.txt', dist), 'utf8');
 const sitemap = await readFile(new URL('sitemap-0.xml', dist), 'utf8');
+if (sitemap.includes('/create-passport-photo/')) failures.push('Canonicalized tool landing page must not be in sitemap');
 const retiredArticles = ['passport-photo-size-a4-printing', 'local-photo-processing-privacy-testing'];
 if ((writing.match(/class="writing-card" href="\/writing\/[^\"]*passport[^\"]*"/g) || []).length !== 1) failures.push('Writing must list only one passport-photo article');
 if (!tool.includes('Make a 35 × 45 mm passport photo sheet for A4 printing.')) failures.push('Dedicated print-sheet search description missing');
+if (!tool.includes('rel="canonical" href="https://passport.chintanpuggalok.com/"')) failures.push('Tool landing page should canonicalize to the app subdomain');
 if (!tool.includes('demo-showcase.jpg') || !tool.includes('synthetic workflow illustration') || !tool.includes('Single-photo JPEG')) failures.push('Tool landing demo/output guidance missing');
 for (const slug of ['building-a-private-indian-passport-photo-tool']) {
   const path = `/writing/${slug}/`;
@@ -75,7 +77,10 @@ for (const slug of ['building-a-private-indian-passport-photo-tool']) {
   if (article.includes('PortfolioApp')) failures.push(`${slug}: unexpectedly loads the AI app`);
   const schemas = [...article.matchAll(/<script[^>]*type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/g)].map(match => JSON.parse(match[1]));
   const metadata = schemas.flatMap(schema => schema['@graph'] || [schema]).find(schema => schema['@type'] === 'Article');
-  if (!metadata || metadata.datePublished !== '2026-09-30' || metadata.dateModified !== '2026-10-06' || !metadata.mainEntityOfPage.includes(path.replace(/\/$/, ''))) failures.push(`${slug}: article structured data missing/incorrect`);
+  if (!metadata || metadata.datePublished !== '2026-09-30' || metadata.dateModified !== '2026-11-05' || !metadata.mainEntityOfPage.includes(path.replace(/\/$/, ''))) failures.push(`${slug}: article structured data missing/incorrect`);
+  for (const phrase of ['The A4 template and print checklist', 'passport photo A4 template', '35mm x 45mm', 'print an Indian passport photo online']) {
+    if (!article.includes(phrase)) failures.push(`${slug}: missing A4/print guidance: ${phrase}`);
+  }
 }
 
 async function listFiles(directory) {

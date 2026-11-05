@@ -8,7 +8,7 @@
 - [Experience](https://chintanpuggalok.com/experience)
 - [Projects](https://chintanpuggalok.com/projects)
 - [Independent builds](https://chintanpuggalok.com/#builds): shipped public tools, separate from professional project case studies.
-- [Free Indian passport photo maker](https://chintanpuggalok.com/create-passport-photo/): a browser-local photo-preparation tool with 35 × 45 mm and custom print layouts; not an official validator.
+- [Free Indian passport photo maker](https://passport.chintanpuggalok.com/): a browser-local photo-preparation tool with 35 × 45 mm and custom print layouts; not an official validator.
 - [Engineering writing](https://chintanpuggalok.com/writing)
 - [Contact](https://chintanpuggalok.com/contact)
 

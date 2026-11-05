@@ -2,12 +2,12 @@
 layout: ../../layouts/ArticleMarkdownLayout.astro
 title: "How I Built a Privacy-First Indian Passport Photo Maker"
 description: "How Chintan Puggalok built a free Indian passport photo maker: local photo editing, 35 × 45 mm and A4 printing, browser privacy, testing, and the mobile roadmap."
-readingTime: "12 min read"
+readingTime: "14 min read"
 publishedTime: "2026-09-30"
-modifiedTime: "2026-10-06"
+modifiedTime: "2026-11-05"
 ---
 
-I built [Passport Photo Sheet India](https://create-passport-photo.chintanpuggalok.com/) to make one small but stressful task easier: turn a portrait into a correctly sized photo sheet without having to learn an image editor or upload a personal photo to a server.
+I built [Passport Photo Sheet India](https://passport.chintanpuggalok.com/) to make one small but stressful task easier: turn a portrait into a correctly sized photo sheet without having to learn an image editor or upload a personal photo to a server.
 
 The project began as a simple browser utility. It grew into a local image-processing pipeline with automatic framing, background removal, A4 PDF/JPEG export, browser-local drafts, optional support payments, and a fairly demanding test matrix. This is the build journey so far—and the evidence-based plan for what comes next.
 
@@ -104,6 +104,56 @@ The browser app has been profiled with large photos, and the memory work found s
 
 I also evaluated native MODNet inference at a 640 px long edge on a 50-photo development set. With conservative mask cleanup, mean boundary alpha error was 7.49% lower than the current comparison pipeline; 35 cases improved and 15 regressed. The isolated evaluation process peaked at 286 MB, excluding the application UI and integrated mobile flow. This is a promising experiment, not independent validation and not a production model switch. Some difficult hair and clothing cases still regress.
 
+## The A4 template and print checklist
+
+The app's A4 template is generated from the portrait, not downloaded as an empty grid. That matters because most “passport photo A4 template” files assume you already know the cell size, margins, and print scaling. Here is the practical version I use when checking a sheet.
+
+### What a passport photo A4 template actually contains
+
+The default passport size photo A4 sheet uses **35 × 45 mm** cells—also written **35mm x 45mm**—with 5 mm page margins and 3 mm gaps. That produces **30 copies in 5 columns × 6 rows**. Change the photo size, margin, or gap in Sheet settings and the copy count changes; the preview is the source of truth.
+
+| Setting | Default | What it controls |
+| --- | --- | --- |
+| Paper | A4 · 210 × 297 mm | The physical page size the PDF is built for |
+| Photo cell | 35 × 45 mm | The carried-photo proportion used by the Indian preset |
+| Copies | 30 · 5 columns × 6 rows | How many cells fit after margins and gaps |
+| Margins / gaps | 5 mm / 3 mm | Space around the grid and between cells |
+| Export | 300 DPI · 2480 × 3508 px | The A4 raster size used by the JPEG export |
+
+At 300 DPI, one 35 × 45 mm cell is about 413 × 531 pixels. The 630 × 810 pixel digital guidance has the same 7:9 proportion but is a different output; do not treat the A4 sheet as a digital-upload file. A soft source photo will not improve by exporting it at a larger pixel count.
+
+The app builds the A4 passport photo template around your crop, so there is no separate Word, PDF, or Photoshop file to align manually. If you need to reuse the layout, keep the exported PDF or JPEG and replace the portrait in the tool rather than editing the sheet in another program.
+
+### Print passport photos online, or at home
+
+You can [open the A4 template in the tool](https://passport.chintanpuggalok.com/#a4-template-title), prepare the portrait, and download the sheet. Then choose one path:
+
+**At home**
+
+1. Open the A4 PDF in a viewer that respects page size.
+2. Choose A4 paper and **Actual size / 100%**; turn off Fit to page and shrink-to-printable-area.
+3. Print one test sheet and measure a 35 × 45 mm cell with a ruler before printing the batch.
+4. Use plain paper for a draft; use photo paper only when your printer and application instructions support it.
+
+**Online**
+
+1. Download the A4 PDF first. The portrait stays in the browser; the PDF leaves your device only when you choose to share or upload it.
+2. Upload the PDF to a print service that accepts PDFs and prints on A4.
+3. Check the preview for cropping, scaling, colour, and paper choice before ordering.
+4. Ask for Actual size / 100%, then measure the first copy. A provider's preview can hide a scaling change.
+
+To print an Indian passport photo online, the important part is not the provider name—it is whether the service prints the PDF at the physical size you prepared. This app can hand a saved PDF to Blinkit Print Store, Zepto Print Store, or Swiggy InstaPrint where those services are available. Availability depends on location and device, and the download remains the fallback. The tool does not place the order.
+
+### A4 template checklist
+
+- 35mm x 45mm cells, not 35 × 45 pixels.
+- 30 copies at the default 5 × 6 layout; recount after changing margins or gaps.
+- A4 paper, Actual size / 100%, no fit-to-page.
+- A measured test print before cutting or ordering more.
+- A sharp original instead of an upscaled, soft image.
+
+If the printed cell is smaller than 35 × 45 mm, the printer or service scaled the page. Fix that before cutting anything; trimming an undersized sheet will not make the photo the right size.
+
 ## The next roadmap
 
 The roadmap is intentionally staged so each step has evidence before it becomes a product promise:
@@ -120,7 +170,7 @@ A native pose model for anatomical shoulder landmarks is also a possible later e
 
 The hard part was not adding another slider or model. It was making the dimensions survive export, making local inference recover when browser capabilities differ, and making privacy claims match the actual data flow. Every intelligent shortcut needs a manual correction path, every memory optimization needs a real measurement, and every statement about passport compliance needs to point back to the relevant official instructions.
 
-The result is still evolving. The web version solves the immediate print-sheet workflow; native inference is a research direction with explicit quality and memory gates, not a promised rewrite. You can [try the tool](https://create-passport-photo.chintanpuggalok.com/) and check the [official Passport Seva instructions](https://www.passportindia.gov.in/) for your specific application.
+The result is still evolving. The web version solves the immediate print-sheet workflow; native inference is a research direction with explicit quality and memory gates, not a promised rewrite. You can [try the tool](https://passport.chintanpuggalok.com/) and check the [official Passport Seva instructions](https://www.passportindia.gov.in/) for your specific application.
 
 ### Quick answers
 
@@ -130,4 +180,10 @@ The result is still evolving. The web version solves the immediate print-sheet w
 
 **Is there a native phone app today?** No. The current product is a web app. Native inference is a proposed next step, gated on real-device quality and total-memory tests.
 
-[Open the free passport photo maker](/passport-photo-maker) or inspect the [source repository](https://github.com/chintanpuggalok/passport-photos). This article combines the original build journey with the October 6 printing, storage, diagnostics, and testing updates.
+**What is a passport photo A4 template?** An A4 page containing repeated passport-size photo cells. This tool generates one from your portrait; the default is 30 cells of 35 × 45 mm in a 5 × 6 grid, with 5 mm margins and 3 mm gaps.
+
+**How many passport size photos fit on an A4 sheet?** 30 by default. Custom photo sizes, margins, or gaps change the count, so check the preview before downloading.
+
+**Can I print the sheet online?** Yes. Download the A4 PDF, upload it to a service that accepts PDFs, and confirm A4 at Actual size / 100%. The app can hand off to supported print providers where available, but it does not place the order.
+
+[Open the free passport photo maker](/passport-photo-maker) or inspect the [source repository](https://github.com/chintanpuggalok/passport-photos). This article combines the original build journey with the October 6 printing, storage, diagnostics, and testing updates, plus the November 5 A4 template and print checklist.

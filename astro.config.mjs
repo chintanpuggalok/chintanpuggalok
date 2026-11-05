@@ -5,7 +5,7 @@ import sitemap from "@astrojs/sitemap";
 export default defineConfig({
   site: "https://chintanpuggalok.com",
   output: "static",
-  integrations: [react(), sitemap()],
+  integrations: [react(), sitemap({ filter: (page) => !new URL(page).pathname.startsWith("/create-passport-photo") })],
   markdown: {
     shikiConfig: {
       theme: "github-dark-default",
