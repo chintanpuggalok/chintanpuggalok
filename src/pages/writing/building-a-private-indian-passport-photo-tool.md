@@ -7,7 +7,7 @@ publishedTime: "2026-09-30"
 modifiedTime: "2026-11-05"
 ---
 
-I built [Passport Photo Sheet India](https://create-passport-photo.chintanpuggalok.com/) to make one small but stressful task easier: turn a portrait into a correctly sized photo sheet without having to learn an image editor or upload a personal photo to a server.
+I built [Passport Photo Sheet India](https://passport.chintanpuggalok.com/) to make one small but stressful task easier: turn a portrait into a correctly sized photo sheet without having to learn an image editor or upload a personal photo to a server.
 
 The project began as a simple browser utility. It grew into a local image-processing pipeline with automatic framing, background removal, A4 PDF/JPEG export, browser-local drafts, optional support payments, and a fairly demanding test matrix. This is the build journey so far—and the evidence-based plan for what comes next.
 
@@ -126,7 +126,7 @@ The app builds the A4 passport photo template around your crop, so there is no s
 
 ### Print passport photos online, or at home
 
-You can [open the A4 template in the tool](https://create-passport-photo.chintanpuggalok.com/#a4-template-title), prepare the portrait, and download the sheet. Then choose one path:
+You can [open the A4 template in the tool](https://passport.chintanpuggalok.com/#a4-template-title), prepare the portrait, and download the sheet. Then choose one path:
 
 **At home**
 
@@ -170,7 +170,7 @@ A native pose model for anatomical shoulder landmarks is also a possible later e
 
 The hard part was not adding another slider or model. It was making the dimensions survive export, making local inference recover when browser capabilities differ, and making privacy claims match the actual data flow. Every intelligent shortcut needs a manual correction path, every memory optimization needs a real measurement, and every statement about passport compliance needs to point back to the relevant official instructions.
 
-The result is still evolving. The web version solves the immediate print-sheet workflow; native inference is a research direction with explicit quality and memory gates, not a promised rewrite. You can [try the tool](https://create-passport-photo.chintanpuggalok.com/) and check the [official Passport Seva instructions](https://www.passportindia.gov.in/) for your specific application.
+The result is still evolving. The web version solves the immediate print-sheet workflow; native inference is a research direction with explicit quality and memory gates, not a promised rewrite. You can [try the tool](https://passport.chintanpuggalok.com/) and check the [official Passport Seva instructions](https://www.passportindia.gov.in/) for your specific application.
 
 ### Quick answers
 
