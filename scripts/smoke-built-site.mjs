@@ -46,7 +46,7 @@ const expectations = [
   [profile.includes("rel=\"canonical\""), "canonical metadata is missing"],
   [home.includes("1.4M+"), "default homepage does not contain the full profile"],
   [home.includes("/ask?mode=visual"), "default homepage Ask AI link is missing"],
-  [home.includes('id="builds"') && home.includes('href="/create-passport-photo/"') && home.includes('href="/passport-photo-maker"'), "homepage build discovery/tool links are missing"],
+  [home.includes('id="builds"') && home.includes('href="https://passport.chintanpuggalok.com/"'), "homepage build discovery/tool links are missing"],
   [!home.includes("PortfolioApp"), "default homepage unexpectedly loads the AI application"],
   [ask.includes("PortfolioApp"), "Ask AI hydration marker is missing"],
   [ask.includes("View full profile"), "Ask AI no-JavaScript profile fallback is missing"],
@@ -70,7 +70,7 @@ for (const slug of ['building-a-private-indian-passport-photo-tool']) {
     if (!content.includes(path.replace(/\/$/, ''))) failures.push(`${name} does not link/index ${path}`);
   }
   const article = await readFile(new URL(`writing/${slug}/index.html`, dist), 'utf8');
-  if (!article.includes('href="/passport-photo-maker"')) failures.push(`${slug}: tool CTA missing`);
+  if (!article.includes('href="https://passport.chintanpuggalok.com/"')) failures.push(`${slug}: tool CTA missing`);
   if (!article.includes('datetime="2026-09-30"')) failures.push(`${slug}: original publication date lost`);
   if (!article.includes('id="photo-sizing-and-printing"') || !article.includes('Draft persistence across browsers')) failures.push(`${slug}: consolidated guidance missing`);
   if (!article.includes('not an official') && !article.includes('cannot guarantee official')) failures.push(`${slug}: acceptance limitation missing`);
